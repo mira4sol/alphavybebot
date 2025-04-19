@@ -1,0 +1,8 @@
+start - Start vybing
+leaderboard - Get group leaderboard
+wallet - Get a wallet details
+calls - View recent calls
+chart - Get a token chart
+tt - Get top solana tokens
+ttg - Get top tokens
+trending - Get top trending tokens in real time

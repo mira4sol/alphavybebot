@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TgUser {
+  id          String   @id @default(cuid())
+  telegram_id String   @unique
+  username    String?  @unique
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  // Referral system fields
+  referral_code String   @unique @default(cuid())
+  referred_by   TgUser?  @relation("UserReferrals", fields: [referrer_id], references: [id])
+  referrer_id   String?
+  referrals     TgUser[] @relation("UserReferrals")
+
+  // Optional: Track referral rewards/status
+  referralCount    Int                @default(0)
+  rewardPoints     Int                @default(0)
+  Wallet           Wallet[]
+  TokenCall        TokenCall[]
+  LeaderboardEntry LeaderboardEntry[]
+
+  @@index([id, telegram_id, username, referral_code])
+}
+
+model Wallet {
+  id          String   @id @default(cuid())
+  telegram_id String
+  public_key  String
+  private_key String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user TgUser @relation(fields: [telegram_id], references: [telegram_id])
+
+  @@index([telegram_id, public_key])
+}
+
+model TokenCall {
+  id           String @id @default(cuid())
+  telegram_id  String
+  username     String
+  chat_id      String
+  mint_address String
+  price        Float
+  market_cap   Float
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user TgUser @relation(fields: [telegram_id], references: [telegram_id])
+
+  @@index([telegram_id, mint_address])
+}
+
+model LeaderboardEntry {
+  id               String @id @default(cuid())
+  telegram_id      String
+  chat_id          String
+  points           Int    @default(0)
+  successful_calls Int    @default(0)
+  total_calls      Int    @default(0)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user TgUser @relation(fields: [telegram_id], references: [telegram_id])
+
+  @@unique([telegram_id, chat_id])
+  @@index([chat_id, points])
+}
+
+model TokenMint {
+  id           String  @id @default(cuid())
+  mint_address String  @unique
+  name         String?
+  symbol       String?
+  metadata_uri String?
+  supply       Int?
+  decimals     Int     @default(9)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Price tracking
+  price         Float?
+  last_trade_at DateTime?
+
+  // Relations
+  BaseToken  Transaction[] @relation("BaseToken")
+  QuoteToken Transaction[] @relation("QuoteToken")
+
+  @@index([mint_address, price])
+}
+
+model Transaction {
+  id           String   @id @default(cuid())
+  base_mint    String // The token being sold
+  quote_mint   String // The token being bought
+  base_size    String
+  quote_size   String
+  price        Float
+  quantity     Float // Changed from Int to Float for decimal amounts
+  total_amount Float // price * quantity
+  tx_hash      String   @unique
+  programId    String
+  created_at   DateTime @default(now())
+
+  base_token  TokenMint? @relation("BaseToken", fields: [base_mint], references: [mint_address])
+  quote_token TokenMint? @relation("QuoteToken", fields: [quote_mint], references: [mint_address])
+
+  @@index([created_at])
+  @@index([base_mint])
+  @@index([quote_mint])
+  @@index([price])
+}

@@ -1,0 +1,64 @@
+import { UserModel } from '@/models/user.model'
+import { TelegramUpdate } from '@/types'
+import { startMessage } from '@/utils/constants/tg-message.constant'
+import { appLogger } from '@/utils/logger.util'
+import { bot } from '@/utils/platform'
+
+const LOG_NAME = '[StartCommand::Start]'
+
+export const startCommand = async (
+  chat_id: string, // Changed from number
+  payload: TelegramUpdate
+) => {
+  const username = payload?.message?.from?.username
+
+  const user = await UserModel.addUserIfNotExists(chat_id)
+
+  try {
+    const refID = payload?.message?.text.split(' ')[1]
+    if (refID) {
+      await UserModel.addReferral(refID, chat_id)
+    }
+
+    const photo_url = 'https://www.pixawallet.live/meta_dark.png'
+
+    await bot.telegram.sendPhoto(chat_id, photo_url, {
+      caption: startMessage(username ?? ''),
+      // reply_markup: { inline_keyboard: reply_markup.inline_keyboard },
+      parse_mode: 'Markdown',
+    })
+  } catch (error: any) {
+    appLogger.error(`[${LOG_NAME} ${error.message}]`)
+  }
+}
+
+const reply_markup = {
+  resize_keyboard: 'true',
+  inline_keyboard: [
+    [
+      {
+        text: 'Join Chat',
+        // url: 'https://t.me/VybeChat',
+        callback_data: 'click3',
+        //web_app: 'https://t.me/InFuseWalletbot'
+      },
+    ],
+    [
+      {
+        text: 'Follow Channel',
+        // url: 'https://t.me/VybeChatChannel',
+        callback_data: 'click1',
+        //web_app: 'https://t.me/InFuseWalletbot'
+      },
+    ],
+
+    // [
+    //   {
+    //     text: 'Follow us on X',
+    //     url: 'https://twitter.com/infusewallet',
+    //     callback_data: 'click0',
+    //     //web_app: 'https://t.me/InFuseWalletbot'
+    //   },
+    // ],
+  ],
+}
