@@ -1,7 +1,7 @@
 import { EncryptionHelper } from '../utils/encryptions.helper'
 import { prisma } from '../utils/prisma.helper'
 
-export async function createUserWallet(telegram_id: number) {
+export async function createUserWallet(telegram_id: string) {
   try {
     const keypair = EncryptionHelper.generateSolanaKeypair()
     const encryptedPrivateKey = EncryptionHelper.encrypt(keypair.privateKey)
