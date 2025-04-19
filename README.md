@@ -96,4 +96,4 @@ vybe_bot/
 
 ## License
 
-ISC
+[MIT](https://github.com/mira4sol/alphavybebot/blob/main/LICENSE)
