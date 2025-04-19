@@ -1,4 +1,3 @@
-// import type * as types from '.api/apis/vybe-api'
 import type * as types from '@api/vybe-api'
 import type { ConfigOptions, FetchResponse } from 'api/dist/core'
 import APICore from 'api/dist/core'
