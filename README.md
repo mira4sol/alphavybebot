@@ -91,7 +91,6 @@ vybe_bot/
 - Node.js
 - Telegraf
 - Prisma
-- Supabase
 - Solana Web3.js
 
 ## License
