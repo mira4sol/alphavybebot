@@ -1,3 +1,4 @@
+// import { GetTokenDetailsResponse200 } from '.api/apis/vybe-api/types'
 import { GetTokenDetailsResponse200 } from '@api/vybe-api'
 import { TokenCall } from '@prisma/client'
 import { vybeFYITokenLink } from '../links.util'

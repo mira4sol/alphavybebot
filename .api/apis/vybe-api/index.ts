@@ -1,16 +1,17 @@
-import type * as types from './types';
+// import type * as types from '.api/apis/vybe-api'
+import type * as types from '@api/vybe-api'
 import type { ConfigOptions, FetchResponse } from 'api/dist/core'
-import Oas from 'oas';
-import APICore from 'api/dist/core';
-import definition from './openapi.json';
+import APICore from 'api/dist/core'
+import Oas from 'oas'
+import definition from './openapi.json'
 
 class SDK {
-  spec: Oas;
-  core: APICore;
+  spec: Oas
+  core: APICore
 
   constructor() {
-    this.spec = Oas.init(definition);
-    this.core = new APICore(this.spec, 'vybe-api/3.7.2 (api/6.1.3)');
+    this.spec = Oas.init(definition)
+    this.core = new APICore(this.spec, 'vybe-api/3.7.2 (api/6.1.3)')
   }
 
   /**
@@ -21,7 +22,7 @@ class SDK {
    * should be represented in milliseconds.
    */
   config(config: ConfigOptions) {
-    this.core.setConfig(config);
+    this.core.setConfig(config)
   }
 
   /**
@@ -46,8 +47,8 @@ class SDK {
    * @param values Your auth credentials for the API; can specify up to two strings or numbers.
    */
   auth(...values: string[] | number[]) {
-    this.core.setAuth(...values);
-    return this;
+    this.core.setAuth(...values)
+    return this
   }
 
   /**
@@ -70,7 +71,7 @@ class SDK {
    * @param variables An object of variables to replace into the server URL.
    */
   server(url: string, variables = {}) {
-    this.core.setServer(url, variables);
+    this.core.setServer(url, variables)
   }
 
   /**
@@ -82,8 +83,10 @@ class SDK {
    * @throws FetchError<404, types.GetKnownAccountsResponse404> No data could be found
    * @throws FetchError<500, types.GetKnownAccountsResponse500> Internal server error
    */
-  get_known_accounts(metadata?: types.GetKnownAccountsMetadataParam): Promise<FetchResponse<200, types.GetKnownAccountsResponse200>> {
-    return this.core.fetch('/account/known-accounts', 'get', metadata);
+  get_known_accounts(
+    metadata?: types.GetKnownAccountsMetadataParam
+  ): Promise<FetchResponse<200, types.GetKnownAccountsResponse200>> {
+    return this.core.fetch('/account/known-accounts', 'get', metadata)
   }
 
   /**
@@ -95,8 +98,14 @@ class SDK {
    * @throws FetchError<400, types.GetWalletNftsResponse400> Invalid request
    * @throws FetchError<500, types.GetWalletNftsResponse500> Internal server error
    */
-  get_wallet_nfts(metadata: types.GetWalletNftsMetadataParam): Promise<FetchResponse<200, types.GetWalletNftsResponse200>> {
-    return this.core.fetch('/account/nft-balance/{ownerAddress}', 'get', metadata);
+  get_wallet_nfts(
+    metadata: types.GetWalletNftsMetadataParam
+  ): Promise<FetchResponse<200, types.GetWalletNftsResponse200>> {
+    return this.core.fetch(
+      '/account/nft-balance/{ownerAddress}',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -109,8 +118,10 @@ class SDK {
    * @throws FetchError<400, types.PostWalletNftsManyResponse400> Invalid request
    * @throws FetchError<500, types.PostWalletNftsManyResponse500> Internal server error
    */
-  post_wallet_nfts_many(body: types.PostWalletNftsManyBodyParam): Promise<FetchResponse<200, types.PostWalletNftsManyResponse200>> {
-    return this.core.fetch('/account/nft-balances', 'post', body);
+  post_wallet_nfts_many(
+    body: types.PostWalletNftsManyBodyParam
+  ): Promise<FetchResponse<200, types.PostWalletNftsManyResponse200>> {
+    return this.core.fetch('/account/nft-balances', 'post', body)
   }
 
   /**
@@ -122,8 +133,10 @@ class SDK {
    * @throws FetchError<403, types.GetWalletPnlResponse403> Forbidden
    * @throws FetchError<500, types.GetWalletPnlResponse500> Internal server error
    */
-  get_wallet_pnl(metadata: types.GetWalletPnlMetadataParam): Promise<FetchResponse<200, types.GetWalletPnlResponse200>> {
-    return this.core.fetch('/account/pnl/{ownerAddress}', 'get', metadata);
+  get_wallet_pnl(
+    metadata: types.GetWalletPnlMetadataParam
+  ): Promise<FetchResponse<200, types.GetWalletPnlResponse200>> {
+    return this.core.fetch('/account/pnl/{ownerAddress}', 'get', metadata)
   }
 
   /**
@@ -135,8 +148,14 @@ class SDK {
    * @throws FetchError<400, types.GetWalletTokensTsResponse400> Invalid request
    * @throws FetchError<500, types.GetWalletTokensTsResponse500> Internal server error
    */
-  get_wallet_tokens_ts(metadata: types.GetWalletTokensTsMetadataParam): Promise<FetchResponse<200, types.GetWalletTokensTsResponse200>> {
-    return this.core.fetch('/account/token-balance-ts/{ownerAddress}', 'get', metadata);
+  get_wallet_tokens_ts(
+    metadata: types.GetWalletTokensTsMetadataParam
+  ): Promise<FetchResponse<200, types.GetWalletTokensTsResponse200>> {
+    return this.core.fetch(
+      '/account/token-balance-ts/{ownerAddress}',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -148,8 +167,14 @@ class SDK {
    * @throws FetchError<400, types.GetWalletTokensResponse400> Invalid request
    * @throws FetchError<500, types.GetWalletTokensResponse500> Internal server error
    */
-  get_wallet_tokens(metadata: types.GetWalletTokensMetadataParam): Promise<FetchResponse<200, types.GetWalletTokensResponse200>> {
-    return this.core.fetch('/account/token-balance/{ownerAddress}', 'get', metadata);
+  get_wallet_tokens(
+    metadata: types.GetWalletTokensMetadataParam
+  ): Promise<FetchResponse<200, types.GetWalletTokensResponse200>> {
+    return this.core.fetch(
+      '/account/token-balance/{ownerAddress}',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -162,8 +187,10 @@ class SDK {
    * @throws FetchError<400, types.PostWalletTokensManyResponse400> Invalid request
    * @throws FetchError<500, types.PostWalletTokensManyResponse500> Internal server error
    */
-  post_wallet_tokens_many(body: types.PostWalletTokensManyBodyParam): Promise<FetchResponse<200, types.PostWalletTokensManyResponse200>> {
-    return this.core.fetch('/account/token-balances', 'post', body);
+  post_wallet_tokens_many(
+    body: types.PostWalletTokensManyBodyParam
+  ): Promise<FetchResponse<200, types.PostWalletTokensManyResponse200>> {
+    return this.core.fetch('/account/token-balances', 'post', body)
   }
 
   /**
@@ -177,8 +204,10 @@ class SDK {
    * @throws FetchError<400, types.PostWalletTokensTsManyResponse400> Invalid request
    * @throws FetchError<500, types.PostWalletTokensTsManyResponse500> Internal server error
    */
-  post_wallet_tokens_ts_many(body: types.PostWalletTokensTsManyBodyParam): Promise<FetchResponse<200, types.PostWalletTokensTsManyResponse200>> {
-    return this.core.fetch('/account/token-balances-ts', 'post', body);
+  post_wallet_tokens_ts_many(
+    body: types.PostWalletTokensTsManyBodyParam
+  ): Promise<FetchResponse<200, types.PostWalletTokensTsManyResponse200>> {
+    return this.core.fetch('/account/token-balances-ts', 'post', body)
   }
 
   /**
@@ -192,8 +221,14 @@ class SDK {
    *
    * @summary Real-Time Data WebSocket
    */
-  websocket_route(metadata?: types.WebsocketRouteMetadataParam): Promise<FetchResponse<201, types.WebsocketRouteResponse201> | FetchResponse<202, types.WebsocketRouteResponse202> | FetchResponse<203, types.WebsocketRouteResponse203>> {
-    return this.core.fetch('/live', 'get', metadata);
+  websocket_route(
+    metadata?: types.WebsocketRouteMetadataParam
+  ): Promise<
+    | FetchResponse<201, types.WebsocketRouteResponse201>
+    | FetchResponse<202, types.WebsocketRouteResponse202>
+    | FetchResponse<203, types.WebsocketRouteResponse203>
+  > {
+    return this.core.fetch('/live', 'get', metadata)
   }
 
   /**
@@ -204,8 +239,14 @@ class SDK {
    * @throws FetchError<400, types.GetCollectionOwnersResponse400> Invalid request
    * @throws FetchError<500, types.GetCollectionOwnersResponse500> Internal server error
    */
-  get_collection_owners(metadata: types.GetCollectionOwnersMetadataParam): Promise<FetchResponse<200, types.GetCollectionOwnersResponse200>> {
-    return this.core.fetch('/nft/collection-owners/{collectionAddress}', 'get', metadata);
+  get_collection_owners(
+    metadata: types.GetCollectionOwnersMetadataParam
+  ): Promise<FetchResponse<200, types.GetCollectionOwnersResponse200>> {
+    return this.core.fetch(
+      '/nft/collection-owners/{collectionAddress}',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -215,8 +256,10 @@ class SDK {
    * @throws FetchError<400, types.GetMarketsResponse400> Invalid request
    * @throws FetchError<404, types.GetMarketsResponse404> Market not found
    */
-  get_markets(metadata: types.GetMarketsMetadataParam): Promise<FetchResponse<200, types.GetMarketsResponse200>> {
-    return this.core.fetch('/price/markets', 'get', metadata);
+  get_markets(
+    metadata: types.GetMarketsMetadataParam
+  ): Promise<FetchResponse<200, types.GetMarketsResponse200>> {
+    return this.core.fetch('/price/markets', 'get', metadata)
   }
 
   /**
@@ -225,7 +268,7 @@ class SDK {
    * @summary DEX-AMM
    */
   get_programs(): Promise<FetchResponse<200, types.GetProgramsResponse200>> {
-    return this.core.fetch('/price/programs', 'get');
+    return this.core.fetch('/price/programs', 'get')
   }
 
   /**
@@ -234,8 +277,10 @@ class SDK {
    *
    * @summary Pyth Accounts
    */
-  get_pyth_price_product_pairs(metadata?: types.GetPythPriceProductPairsMetadataParam): Promise<FetchResponse<200, types.GetPythPriceProductPairsResponse200>> {
-    return this.core.fetch('/price/pyth-accounts', 'get', metadata);
+  get_pyth_price_product_pairs(
+    metadata?: types.GetPythPriceProductPairsMetadataParam
+  ): Promise<FetchResponse<200, types.GetPythPriceProductPairsResponse200>> {
+    return this.core.fetch('/price/pyth-accounts', 'get', metadata)
   }
 
   /**
@@ -248,8 +293,14 @@ class SDK {
    * @throws FetchError<400, types.GetPairTradeOhlcvProgramResponse400> Invalid request
    * @throws FetchError<500, types.GetPairTradeOhlcvProgramResponse500> Internal server error
    */
-  get_pair_trade_ohlcv_program(metadata: types.GetPairTradeOhlcvProgramMetadataParam): Promise<FetchResponse<200, types.GetPairTradeOhlcvProgramResponse200>> {
-    return this.core.fetch('/price/{baseMintAddress}+{quoteMintAddress}/pair-ohlcv', 'get', metadata);
+  get_pair_trade_ohlcv_program(
+    metadata: types.GetPairTradeOhlcvProgramMetadataParam
+  ): Promise<FetchResponse<200, types.GetPairTradeOhlcvProgramResponse200>> {
+    return this.core.fetch(
+      '/price/{baseMintAddress}+{quoteMintAddress}/pair-ohlcv',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -261,8 +312,10 @@ class SDK {
    * @throws FetchError<400, types.GetMarketFilteredOhlcvResponse400> Invalid request
    * @throws FetchError<500, types.GetMarketFilteredOhlcvResponse500> Internal server error
    */
-  get_market_filtered_ohlcv(metadata: types.GetMarketFilteredOhlcvMetadataParam): Promise<FetchResponse<200, types.GetMarketFilteredOhlcvResponse200>> {
-    return this.core.fetch('/price/{marketId}/market-ohlcv', 'get', metadata);
+  get_market_filtered_ohlcv(
+    metadata: types.GetMarketFilteredOhlcvMetadataParam
+  ): Promise<FetchResponse<200, types.GetMarketFilteredOhlcvResponse200>> {
+    return this.core.fetch('/price/{marketId}/market-ohlcv', 'get', metadata)
   }
 
   /**
@@ -273,8 +326,10 @@ class SDK {
    * @throws FetchError<400, types.GetTokenTradeOhlcResponse400> Invalid request
    * @throws FetchError<500, types.GetTokenTradeOhlcResponse500> Internal server error
    */
-  get_token_trade_ohlc(metadata: types.GetTokenTradeOhlcMetadataParam): Promise<FetchResponse<200, types.GetTokenTradeOhlcResponse200>> {
-    return this.core.fetch('/price/{mintAddress}/token-ohlcv', 'get', metadata);
+  get_token_trade_ohlc(
+    metadata: types.GetTokenTradeOhlcMetadataParam
+  ): Promise<FetchResponse<200, types.GetTokenTradeOhlcResponse200>> {
+    return this.core.fetch('/price/{mintAddress}/token-ohlcv', 'get', metadata)
   }
 
   /**
@@ -286,8 +341,10 @@ class SDK {
    * @throws FetchError<404, types.GetPythPriceResponse404> Product not found
    * @throws FetchError<500, types.GetPythPriceResponse500> Internal server error
    */
-  get_pyth_price(metadata: types.GetPythPriceMetadataParam): Promise<FetchResponse<200, types.GetPythPriceResponse200>> {
-    return this.core.fetch('/price/{priceFeedId}/pyth-price', 'get', metadata);
+  get_pyth_price(
+    metadata: types.GetPythPriceMetadataParam
+  ): Promise<FetchResponse<200, types.GetPythPriceResponse200>> {
+    return this.core.fetch('/price/{priceFeedId}/pyth-price', 'get', metadata)
   }
 
   /**
@@ -298,8 +355,14 @@ class SDK {
    * @throws FetchError<404, types.GetPythPriceOhlcResponse404> Product not found
    * @throws FetchError<500, types.GetPythPriceOhlcResponse500> Internal server error
    */
-  get_pyth_price_ohlc(metadata: types.GetPythPriceOhlcMetadataParam): Promise<FetchResponse<200, types.GetPythPriceOhlcResponse200>> {
-    return this.core.fetch('/price/{priceFeedId}/pyth-price-ohlc', 'get', metadata);
+  get_pyth_price_ohlc(
+    metadata: types.GetPythPriceOhlcMetadataParam
+  ): Promise<FetchResponse<200, types.GetPythPriceOhlcResponse200>> {
+    return this.core.fetch(
+      '/price/{priceFeedId}/pyth-price-ohlc',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -310,8 +373,14 @@ class SDK {
    * @throws FetchError<404, types.GetPythPriceTsResponse404> Product not found
    * @throws FetchError<500, types.GetPythPriceTsResponse500> Internal server error
    */
-  get_pyth_price_ts(metadata: types.GetPythPriceTsMetadataParam): Promise<FetchResponse<200, types.GetPythPriceTsResponse200>> {
-    return this.core.fetch('/price/{priceFeedId}/pyth-price-ts', 'get', metadata);
+  get_pyth_price_ts(
+    metadata: types.GetPythPriceTsMetadataParam
+  ): Promise<FetchResponse<200, types.GetPythPriceTsResponse200>> {
+    return this.core.fetch(
+      '/price/{priceFeedId}/pyth-price-ts',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -322,8 +391,10 @@ class SDK {
    * @throws FetchError<404, types.GetPythProductResponse404> Product not found
    * @throws FetchError<500, types.GetPythProductResponse500> Internal server error
    */
-  get_pyth_product(metadata: types.GetPythProductMetadataParam): Promise<FetchResponse<200, types.GetPythProductResponse200>> {
-    return this.core.fetch('/price/{productId}/pyth-product', 'get', metadata);
+  get_pyth_product(
+    metadata: types.GetPythProductMetadataParam
+  ): Promise<FetchResponse<200, types.GetPythProductResponse200>> {
+    return this.core.fetch('/price/{productId}/pyth-product', 'get', metadata)
   }
 
   /**
@@ -336,8 +407,10 @@ class SDK {
    * @throws FetchError<404, types.GetKnownProgramAccountsResponse404> No data could be found
    * @throws FetchError<500, types.GetKnownProgramAccountsResponse500> Internal server error
    */
-  get_known_program_accounts(metadata?: types.GetKnownProgramAccountsMetadataParam): Promise<FetchResponse<200, types.GetKnownProgramAccountsResponse200>> {
-    return this.core.fetch('/program/known-program-accounts', 'get', metadata);
+  get_known_program_accounts(
+    metadata?: types.GetKnownProgramAccountsMetadataParam
+  ): Promise<FetchResponse<200, types.GetKnownProgramAccountsResponse200>> {
+    return this.core.fetch('/program/known-program-accounts', 'get', metadata)
   }
 
   /**
@@ -348,8 +421,10 @@ class SDK {
    * @throws FetchError<404, types.RankingResponse404> No data found
    * @throws FetchError<500, types.RankingResponse500> Internal server error
    */
-  ranking(metadata?: types.RankingMetadataParam): Promise<FetchResponse<200, types.RankingResponse200>> {
-    return this.core.fetch('/program/ranking', 'get', metadata);
+  ranking(
+    metadata?: types.RankingMetadataParam
+  ): Promise<FetchResponse<200, types.RankingResponse200>> {
+    return this.core.fetch('/program/ranking', 'get', metadata)
   }
 
   /**
@@ -360,8 +435,10 @@ class SDK {
    * @throws FetchError<400, types.GetProgramResponse400> Invalid request
    * @throws FetchError<500, types.GetProgramResponse500> Internal server error
    */
-  get_program(metadata: types.GetProgramMetadataParam): Promise<FetchResponse<200, types.GetProgramResponse200>> {
-    return this.core.fetch('/program/{programAddress}', 'get', metadata);
+  get_program(
+    metadata: types.GetProgramMetadataParam
+  ): Promise<FetchResponse<200, types.GetProgramResponse200>> {
+    return this.core.fetch('/program/{programAddress}', 'get', metadata)
   }
 
   /**
@@ -371,8 +448,14 @@ class SDK {
    * @throws FetchError<400, types.GetProgramActiveUsersResponse400> Invalid request
    * @throws FetchError<500, types.GetProgramActiveUsersResponse500> Internal server error
    */
-  get_program_active_users(metadata: types.GetProgramActiveUsersMetadataParam): Promise<FetchResponse<200, types.GetProgramActiveUsersResponse200>> {
-    return this.core.fetch('/program/{programAddress}/active-users', 'get', metadata);
+  get_program_active_users(
+    metadata: types.GetProgramActiveUsersMetadataParam
+  ): Promise<FetchResponse<200, types.GetProgramActiveUsersResponse200>> {
+    return this.core.fetch(
+      '/program/{programAddress}/active-users',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -381,8 +464,14 @@ class SDK {
    *
    * @summary Active Users: Time Series
    */
-  get_program_active_users_count(metadata: types.GetProgramActiveUsersCountMetadataParam): Promise<FetchResponse<200, types.GetProgramActiveUsersCountResponse200>> {
-    return this.core.fetch('/program/{programAddress}/active-users-ts', 'get', metadata);
+  get_program_active_users_count(
+    metadata: types.GetProgramActiveUsersCountMetadataParam
+  ): Promise<FetchResponse<200, types.GetProgramActiveUsersCountResponse200>> {
+    return this.core.fetch(
+      '/program/{programAddress}/active-users-ts',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -394,8 +483,14 @@ class SDK {
    * @throws FetchError<400, types.GetProgramInstructionsCountResponse400> Invalid request
    * @throws FetchError<500, types.GetProgramInstructionsCountResponse500> Internal server error
    */
-  get_program_instructions_count(metadata: types.GetProgramInstructionsCountMetadataParam): Promise<FetchResponse<200, types.GetProgramInstructionsCountResponse200>> {
-    return this.core.fetch('/program/{programAddress}/instructions-count-ts', 'get', metadata);
+  get_program_instructions_count(
+    metadata: types.GetProgramInstructionsCountMetadataParam
+  ): Promise<FetchResponse<200, types.GetProgramInstructionsCountResponse200>> {
+    return this.core.fetch(
+      '/program/{programAddress}/instructions-count-ts',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -407,8 +502,14 @@ class SDK {
    * @throws FetchError<400, types.GetProgramTransactionsCountResponse400> Invalid request
    * @throws FetchError<500, types.GetProgramTransactionsCountResponse500> Internal server error
    */
-  get_program_transactions_count(metadata: types.GetProgramTransactionsCountMetadataParam): Promise<FetchResponse<200, types.GetProgramTransactionsCountResponse200>> {
-    return this.core.fetch('/program/{programAddress}/transactions-count-ts', 'get', metadata);
+  get_program_transactions_count(
+    metadata: types.GetProgramTransactionsCountMetadataParam
+  ): Promise<FetchResponse<200, types.GetProgramTransactionsCountResponse200>> {
+    return this.core.fetch(
+      '/program/{programAddress}/transactions-count-ts',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -418,8 +519,10 @@ class SDK {
    * @throws FetchError<400, types.GetProgramTvlResponse400> Invalid request
    * @throws FetchError<500, types.GetProgramTvlResponse500> Internal server error
    */
-  get_program_tvl(metadata: types.GetProgramTvlMetadataParam): Promise<FetchResponse<200, types.GetProgramTvlResponse200>> {
-    return this.core.fetch('/program/{programAddress}/tvl', 'get', metadata);
+  get_program_tvl(
+    metadata: types.GetProgramTvlMetadataParam
+  ): Promise<FetchResponse<200, types.GetProgramTvlResponse200>> {
+    return this.core.fetch('/program/{programAddress}/tvl', 'get', metadata)
   }
 
   /**
@@ -430,8 +533,10 @@ class SDK {
    * @throws FetchError<400, types.GetProgramsListResponse400> Invalid request
    * @throws FetchError<500, types.GetProgramsListResponse500> Internal server error
    */
-  get_programs_list(metadata?: types.GetProgramsListMetadataParam): Promise<FetchResponse<200, types.GetProgramsListResponse200>> {
-    return this.core.fetch('/programs', 'get', metadata);
+  get_programs_list(
+    metadata?: types.GetProgramsListMetadataParam
+  ): Promise<FetchResponse<200, types.GetProgramsListResponse200>> {
+    return this.core.fetch('/programs', 'get', metadata)
   }
 
   /**
@@ -444,8 +549,10 @@ class SDK {
    * @throws FetchError<404, types.GetTokenInstructionNamesResponse404> No data matches provided query
    * @throws FetchError<500, types.GetTokenInstructionNamesResponse500> Internal server error
    */
-  get_token_instruction_names(metadata?: types.GetTokenInstructionNamesMetadataParam): Promise<FetchResponse<200, types.GetTokenInstructionNamesResponse200>> {
-    return this.core.fetch('/token/instruction-names', 'get', metadata);
+  get_token_instruction_names(
+    metadata?: types.GetTokenInstructionNamesMetadataParam
+  ): Promise<FetchResponse<200, types.GetTokenInstructionNamesResponse200>> {
+    return this.core.fetch('/token/instruction-names', 'get', metadata)
   }
 
   /**
@@ -456,8 +563,10 @@ class SDK {
    * @throws FetchError<400, types.GetTradeDataProgramResponse400> Invalid request
    * @throws FetchError<500, types.GetTradeDataProgramResponse500> Internal server error
    */
-  get_trade_data_program(metadata?: types.GetTradeDataProgramMetadataParam): Promise<FetchResponse<200, types.GetTradeDataProgramResponse200>> {
-    return this.core.fetch('/token/trades', 'get', metadata);
+  get_trade_data_program(
+    metadata?: types.GetTradeDataProgramMetadataParam
+  ): Promise<FetchResponse<200, types.GetTradeDataProgramResponse200>> {
+    return this.core.fetch('/token/trades', 'get', metadata)
   }
 
   /**
@@ -471,8 +580,10 @@ class SDK {
    * @throws FetchError<400, types.GetTokenTransfersResponse400> Invalid request
    * @throws FetchError<500, types.GetTokenTransfersResponse500> Internal server error
    */
-  get_token_transfers(metadata?: types.GetTokenTransfersMetadataParam): Promise<FetchResponse<200, types.GetTokenTransfersResponse200>> {
-    return this.core.fetch('/token/transfers', 'get', metadata);
+  get_token_transfers(
+    metadata?: types.GetTokenTransfersMetadataParam
+  ): Promise<FetchResponse<200, types.GetTokenTransfersResponse200>> {
+    return this.core.fetch('/token/transfers', 'get', metadata)
   }
 
   /**
@@ -485,8 +596,10 @@ class SDK {
    * @throws FetchError<404, types.GetTokenDetailsResponse404> No data matches provided query
    * @throws FetchError<500, types.GetTokenDetailsResponse500> Internal server error
    */
-  get_token_details(metadata: types.GetTokenDetailsMetadataParam): Promise<FetchResponse<200, types.GetTokenDetailsResponse200>> {
-    return this.core.fetch('/token/{mintAddress}', 'get', metadata);
+  get_token_details(
+    metadata: types.GetTokenDetailsMetadataParam
+  ): Promise<FetchResponse<200, types.GetTokenDetailsResponse200>> {
+    return this.core.fetch('/token/{mintAddress}', 'get', metadata)
   }
 
   /**
@@ -501,8 +614,10 @@ class SDK {
    * @throws FetchError<404, types.GetTokenHoldersTimeSeriesResponse404> No data matches provided query
    * @throws FetchError<500, types.GetTokenHoldersTimeSeriesResponse500> Internal server error
    */
-  get_token_holders_time_series(metadata: types.GetTokenHoldersTimeSeriesMetadataParam): Promise<FetchResponse<200, types.GetTokenHoldersTimeSeriesResponse200>> {
-    return this.core.fetch('/token/{mintAddress}/holders-ts', 'get', metadata);
+  get_token_holders_time_series(
+    metadata: types.GetTokenHoldersTimeSeriesMetadataParam
+  ): Promise<FetchResponse<200, types.GetTokenHoldersTimeSeriesResponse200>> {
+    return this.core.fetch('/token/{mintAddress}/holders-ts', 'get', metadata)
   }
 
   /**
@@ -518,8 +633,10 @@ class SDK {
    * @throws FetchError<404, types.GetTopHoldersResponse404> No data matches provided query
    * @throws FetchError<500, types.GetTopHoldersResponse500> Internal server error
    */
-  get_top_holders(metadata: types.GetTopHoldersMetadataParam): Promise<FetchResponse<200, types.GetTopHoldersResponse200>> {
-    return this.core.fetch('/token/{mintAddress}/top-holders', 'get', metadata);
+  get_top_holders(
+    metadata: types.GetTopHoldersMetadataParam
+  ): Promise<FetchResponse<200, types.GetTopHoldersResponse200>> {
+    return this.core.fetch('/token/{mintAddress}/top-holders', 'get', metadata)
   }
 
   /**
@@ -533,8 +650,14 @@ class SDK {
    * @throws FetchError<404, types.GetTokenVolumeTimeSeriesResponse404> No data matches provided query
    * @throws FetchError<500, types.GetTokenVolumeTimeSeriesResponse500> Internal server error
    */
-  get_token_volume_time_series(metadata: types.GetTokenVolumeTimeSeriesMetadataParam): Promise<FetchResponse<200, types.GetTokenVolumeTimeSeriesResponse200>> {
-    return this.core.fetch('/token/{mintAddress}/transfer-volume', 'get', metadata);
+  get_token_volume_time_series(
+    metadata: types.GetTokenVolumeTimeSeriesMetadataParam
+  ): Promise<FetchResponse<200, types.GetTokenVolumeTimeSeriesResponse200>> {
+    return this.core.fetch(
+      '/token/{mintAddress}/transfer-volume',
+      'get',
+      metadata
+    )
   }
 
   /**
@@ -552,14 +675,172 @@ class SDK {
    * @throws FetchError<404, types.GetTokensSummaryResponse404> No data matches provided query
    * @throws FetchError<500, types.GetTokensSummaryResponse500> Internal server error
    */
-  get_tokens_summary(metadata?: types.GetTokensSummaryMetadataParam): Promise<FetchResponse<200, types.GetTokensSummaryResponse200>> {
-    return this.core.fetch('/tokens', 'get', metadata);
+  get_tokens_summary(
+    metadata?: types.GetTokensSummaryMetadataParam
+  ): Promise<FetchResponse<200, types.GetTokensSummaryResponse200>> {
+    return this.core.fetch('/tokens', 'get', metadata)
   }
 }
 
-const createSDK = (() => { return new SDK(); })()
-;
+const createSDK = (() => {
+  return new SDK()
+})()
+export default createSDK
 
-export default createSDK;
-
-export type { GetCollectionOwnersMetadataParam, GetCollectionOwnersResponse200, GetCollectionOwnersResponse400, GetCollectionOwnersResponse500, GetKnownAccountsMetadataParam, GetKnownAccountsResponse200, GetKnownAccountsResponse400, GetKnownAccountsResponse404, GetKnownAccountsResponse500, GetKnownProgramAccountsMetadataParam, GetKnownProgramAccountsResponse200, GetKnownProgramAccountsResponse400, GetKnownProgramAccountsResponse404, GetKnownProgramAccountsResponse500, GetMarketFilteredOhlcvMetadataParam, GetMarketFilteredOhlcvResponse200, GetMarketFilteredOhlcvResponse400, GetMarketFilteredOhlcvResponse500, GetMarketsMetadataParam, GetMarketsResponse200, GetMarketsResponse400, GetMarketsResponse404, GetPairTradeOhlcvProgramMetadataParam, GetPairTradeOhlcvProgramResponse200, GetPairTradeOhlcvProgramResponse400, GetPairTradeOhlcvProgramResponse500, GetProgramActiveUsersCountMetadataParam, GetProgramActiveUsersCountResponse200, GetProgramActiveUsersMetadataParam, GetProgramActiveUsersResponse200, GetProgramActiveUsersResponse400, GetProgramActiveUsersResponse500, GetProgramInstructionsCountMetadataParam, GetProgramInstructionsCountResponse200, GetProgramInstructionsCountResponse400, GetProgramInstructionsCountResponse500, GetProgramMetadataParam, GetProgramResponse200, GetProgramResponse400, GetProgramResponse500, GetProgramTransactionsCountMetadataParam, GetProgramTransactionsCountResponse200, GetProgramTransactionsCountResponse400, GetProgramTransactionsCountResponse500, GetProgramTvlMetadataParam, GetProgramTvlResponse200, GetProgramTvlResponse400, GetProgramTvlResponse500, GetProgramsListMetadataParam, GetProgramsListResponse200, GetProgramsListResponse400, GetProgramsListResponse500, GetProgramsResponse200, GetPythPriceMetadataParam, GetPythPriceOhlcMetadataParam, GetPythPriceOhlcResponse200, GetPythPriceOhlcResponse400, GetPythPriceOhlcResponse404, GetPythPriceOhlcResponse500, GetPythPriceProductPairsMetadataParam, GetPythPriceProductPairsResponse200, GetPythPriceResponse200, GetPythPriceResponse400, GetPythPriceResponse404, GetPythPriceResponse500, GetPythPriceTsMetadataParam, GetPythPriceTsResponse200, GetPythPriceTsResponse400, GetPythPriceTsResponse404, GetPythPriceTsResponse500, GetPythProductMetadataParam, GetPythProductResponse200, GetPythProductResponse400, GetPythProductResponse404, GetPythProductResponse500, GetTokenDetailsMetadataParam, GetTokenDetailsResponse200, GetTokenDetailsResponse400, GetTokenDetailsResponse404, GetTokenDetailsResponse500, GetTokenHoldersTimeSeriesMetadataParam, GetTokenHoldersTimeSeriesResponse200, GetTokenHoldersTimeSeriesResponse400, GetTokenHoldersTimeSeriesResponse404, GetTokenHoldersTimeSeriesResponse500, GetTokenInstructionNamesMetadataParam, GetTokenInstructionNamesResponse200, GetTokenInstructionNamesResponse400, GetTokenInstructionNamesResponse404, GetTokenInstructionNamesResponse500, GetTokenTradeOhlcMetadataParam, GetTokenTradeOhlcResponse200, GetTokenTradeOhlcResponse400, GetTokenTradeOhlcResponse500, GetTokenTransfersMetadataParam, GetTokenTransfersResponse200, GetTokenTransfersResponse400, GetTokenTransfersResponse500, GetTokenVolumeTimeSeriesMetadataParam, GetTokenVolumeTimeSeriesResponse200, GetTokenVolumeTimeSeriesResponse400, GetTokenVolumeTimeSeriesResponse404, GetTokenVolumeTimeSeriesResponse500, GetTokensSummaryMetadataParam, GetTokensSummaryResponse200, GetTokensSummaryResponse400, GetTokensSummaryResponse404, GetTokensSummaryResponse500, GetTopHoldersMetadataParam, GetTopHoldersResponse200, GetTopHoldersResponse400, GetTopHoldersResponse404, GetTopHoldersResponse500, GetTradeDataProgramMetadataParam, GetTradeDataProgramResponse200, GetTradeDataProgramResponse400, GetTradeDataProgramResponse500, GetWalletNftsMetadataParam, GetWalletNftsResponse200, GetWalletNftsResponse400, GetWalletNftsResponse500, GetWalletPnlMetadataParam, GetWalletPnlResponse200, GetWalletPnlResponse400, GetWalletPnlResponse403, GetWalletPnlResponse500, GetWalletTokensMetadataParam, GetWalletTokensResponse200, GetWalletTokensResponse400, GetWalletTokensResponse500, GetWalletTokensTsMetadataParam, GetWalletTokensTsResponse200, GetWalletTokensTsResponse400, GetWalletTokensTsResponse500, PostWalletNftsManyBodyParam, PostWalletNftsManyResponse200, PostWalletNftsManyResponse400, PostWalletNftsManyResponse500, PostWalletTokensManyBodyParam, PostWalletTokensManyResponse200, PostWalletTokensManyResponse400, PostWalletTokensManyResponse500, PostWalletTokensTsManyBodyParam, PostWalletTokensTsManyResponse200, PostWalletTokensTsManyResponse400, PostWalletTokensTsManyResponse500, RankingMetadataParam, RankingResponse200, RankingResponse400, RankingResponse404, RankingResponse500, WebsocketRouteMetadataParam, WebsocketRouteResponse201, WebsocketRouteResponse202, WebsocketRouteResponse203 } from './types';
+export type {
+  GetCollectionOwnersMetadataParam,
+  GetCollectionOwnersResponse200,
+  GetCollectionOwnersResponse400,
+  GetCollectionOwnersResponse500,
+  GetKnownAccountsMetadataParam,
+  GetKnownAccountsResponse200,
+  GetKnownAccountsResponse400,
+  GetKnownAccountsResponse404,
+  GetKnownAccountsResponse500,
+  GetKnownProgramAccountsMetadataParam,
+  GetKnownProgramAccountsResponse200,
+  GetKnownProgramAccountsResponse400,
+  GetKnownProgramAccountsResponse404,
+  GetKnownProgramAccountsResponse500,
+  GetMarketFilteredOhlcvMetadataParam,
+  GetMarketFilteredOhlcvResponse200,
+  GetMarketFilteredOhlcvResponse400,
+  GetMarketFilteredOhlcvResponse500,
+  GetMarketsMetadataParam,
+  GetMarketsResponse200,
+  GetMarketsResponse400,
+  GetMarketsResponse404,
+  GetPairTradeOhlcvProgramMetadataParam,
+  GetPairTradeOhlcvProgramResponse200,
+  GetPairTradeOhlcvProgramResponse400,
+  GetPairTradeOhlcvProgramResponse500,
+  GetProgramActiveUsersCountMetadataParam,
+  GetProgramActiveUsersCountResponse200,
+  GetProgramActiveUsersMetadataParam,
+  GetProgramActiveUsersResponse200,
+  GetProgramActiveUsersResponse400,
+  GetProgramActiveUsersResponse500,
+  GetProgramInstructionsCountMetadataParam,
+  GetProgramInstructionsCountResponse200,
+  GetProgramInstructionsCountResponse400,
+  GetProgramInstructionsCountResponse500,
+  GetProgramMetadataParam,
+  GetProgramResponse200,
+  GetProgramResponse400,
+  GetProgramResponse500,
+  GetProgramsListMetadataParam,
+  GetProgramsListResponse200,
+  GetProgramsListResponse400,
+  GetProgramsListResponse500,
+  GetProgramsResponse200,
+  GetProgramTransactionsCountMetadataParam,
+  GetProgramTransactionsCountResponse200,
+  GetProgramTransactionsCountResponse400,
+  GetProgramTransactionsCountResponse500,
+  GetProgramTvlMetadataParam,
+  GetProgramTvlResponse200,
+  GetProgramTvlResponse400,
+  GetProgramTvlResponse500,
+  GetPythPriceMetadataParam,
+  GetPythPriceOhlcMetadataParam,
+  GetPythPriceOhlcResponse200,
+  GetPythPriceOhlcResponse400,
+  GetPythPriceOhlcResponse404,
+  GetPythPriceOhlcResponse500,
+  GetPythPriceProductPairsMetadataParam,
+  GetPythPriceProductPairsResponse200,
+  GetPythPriceResponse200,
+  GetPythPriceResponse400,
+  GetPythPriceResponse404,
+  GetPythPriceResponse500,
+  GetPythPriceTsMetadataParam,
+  GetPythPriceTsResponse200,
+  GetPythPriceTsResponse400,
+  GetPythPriceTsResponse404,
+  GetPythPriceTsResponse500,
+  GetPythProductMetadataParam,
+  GetPythProductResponse200,
+  GetPythProductResponse400,
+  GetPythProductResponse404,
+  GetPythProductResponse500,
+  GetTokenDetailsMetadataParam,
+  GetTokenDetailsResponse200,
+  GetTokenDetailsResponse400,
+  GetTokenDetailsResponse404,
+  GetTokenDetailsResponse500,
+  GetTokenHoldersTimeSeriesMetadataParam,
+  GetTokenHoldersTimeSeriesResponse200,
+  GetTokenHoldersTimeSeriesResponse400,
+  GetTokenHoldersTimeSeriesResponse404,
+  GetTokenHoldersTimeSeriesResponse500,
+  GetTokenInstructionNamesMetadataParam,
+  GetTokenInstructionNamesResponse200,
+  GetTokenInstructionNamesResponse400,
+  GetTokenInstructionNamesResponse404,
+  GetTokenInstructionNamesResponse500,
+  GetTokensSummaryMetadataParam,
+  GetTokensSummaryResponse200,
+  GetTokensSummaryResponse400,
+  GetTokensSummaryResponse404,
+  GetTokensSummaryResponse500,
+  GetTokenTradeOhlcMetadataParam,
+  GetTokenTradeOhlcResponse200,
+  GetTokenTradeOhlcResponse400,
+  GetTokenTradeOhlcResponse500,
+  GetTokenTransfersMetadataParam,
+  GetTokenTransfersResponse200,
+  GetTokenTransfersResponse400,
+  GetTokenTransfersResponse500,
+  GetTokenVolumeTimeSeriesMetadataParam,
+  GetTokenVolumeTimeSeriesResponse200,
+  GetTokenVolumeTimeSeriesResponse400,
+  GetTokenVolumeTimeSeriesResponse404,
+  GetTokenVolumeTimeSeriesResponse500,
+  GetTopHoldersMetadataParam,
+  GetTopHoldersResponse200,
+  GetTopHoldersResponse400,
+  GetTopHoldersResponse404,
+  GetTopHoldersResponse500,
+  GetTradeDataProgramMetadataParam,
+  GetTradeDataProgramResponse200,
+  GetTradeDataProgramResponse400,
+  GetTradeDataProgramResponse500,
+  GetWalletNftsMetadataParam,
+  GetWalletNftsResponse200,
+  GetWalletNftsResponse400,
+  GetWalletNftsResponse500,
+  GetWalletPnlMetadataParam,
+  GetWalletPnlResponse200,
+  GetWalletPnlResponse400,
+  GetWalletPnlResponse403,
+  GetWalletPnlResponse500,
+  GetWalletTokensMetadataParam,
+  GetWalletTokensResponse200,
+  GetWalletTokensResponse400,
+  GetWalletTokensResponse500,
+  GetWalletTokensTsMetadataParam,
+  GetWalletTokensTsResponse200,
+  GetWalletTokensTsResponse400,
+  GetWalletTokensTsResponse500,
+  PostWalletNftsManyBodyParam,
+  PostWalletNftsManyResponse200,
+  PostWalletNftsManyResponse400,
+  PostWalletNftsManyResponse500,
+  PostWalletTokensManyBodyParam,
+  PostWalletTokensManyResponse200,
+  PostWalletTokensManyResponse400,
+  PostWalletTokensManyResponse500,
+  PostWalletTokensTsManyBodyParam,
+  PostWalletTokensTsManyResponse200,
+  PostWalletTokensTsManyResponse400,
+  PostWalletTokensTsManyResponse500,
+  RankingMetadataParam,
+  RankingResponse200,
+  RankingResponse400,
+  RankingResponse404,
+  RankingResponse500,
+  WebsocketRouteMetadataParam,
+  WebsocketRouteResponse201,
+  WebsocketRouteResponse202,
+  WebsocketRouteResponse203,
+} from './types'
