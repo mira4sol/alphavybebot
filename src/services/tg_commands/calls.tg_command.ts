@@ -13,12 +13,20 @@ export const callsCommand = async (
   chat_id: string,
   payload: TelegramUpdate
 ) => {
-  let deleteId = (
-    await bot.telegram.sendMessage(chat_id, '⏳ Fetching last 10 calls...')
-  )?.message_id
+  let deleteMessageId = 0
 
   try {
     const text = payload?.message?.text
+
+    if (payload?.message?.chat?.type === 'private')
+      return await bot.telegram.sendMessage(
+        chat_id,
+        'This command can only be used in groups ⛔️'
+      )
+
+    deleteMessageId = (
+      await bot.telegram.sendMessage(chat_id, '⏳ Fetching last 10 calls...')
+    )?.message_id
 
     const call = await TokenCallModel.getChatTopCaller(chat_id)
     console.log('calls', call)
@@ -71,6 +79,7 @@ ${tokenCallsText}`
       error?.data?.message || 'Error Occurred'
     )
   } finally {
-    if (deleteId) await bot.telegram.deleteMessage(chat_id, deleteId)
+    if (deleteMessageId && deleteMessageId !== 0)
+      await bot.telegram.deleteMessage(chat_id, deleteMessageId)
   }
 }

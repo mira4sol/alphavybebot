@@ -10,9 +10,7 @@ export const leaderboardCommand = async (
   chat_id: string,
   payload: TelegramUpdate
 ) => {
-  let deleteId = (
-    await bot.telegram.sendMessage(chat_id, '⏳ Fetching leaderboard...')
-  )?.message_id
+  let deleteMessageId = 0
 
   try {
     const text = payload?.message?.text
@@ -22,6 +20,10 @@ export const leaderboardCommand = async (
         chat_id,
         'This command can only be used in groups ⛔️'
       )
+
+    deleteMessageId = (
+      await bot.telegram.sendMessage(chat_id, '⏳ Fetching leaderboard...')
+    )?.message_id
 
     const getLeaderBoard = await LeaderboardModel.getGroupLeaderboard(chat_id)
     console.log('leaderboardCommand', getLeaderBoard)
@@ -61,6 +63,7 @@ ${leaderboardTexts}`
       error?.data?.message || 'Error Occurred'
     )
   } finally {
-    if (deleteId) await bot.telegram.deleteMessage(chat_id, deleteId)
+    if (deleteMessageId)
+      await bot.telegram.deleteMessage(chat_id, deleteMessageId)
   }
 }

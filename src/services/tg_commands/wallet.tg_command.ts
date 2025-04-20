@@ -11,9 +11,7 @@ export const walletCommand = async (
   chat_id: string,
   payload: TelegramUpdate
 ) => {
-  let deleteId = (
-    await bot.telegram.sendMessage(chat_id, '⏳ Fetching wallet details...')
-  )?.message_id
+  let deleteMessageId = 0
 
   try {
     const text = payload?.message?.text
@@ -25,6 +23,10 @@ export const walletCommand = async (
 
       return await bot.telegram.sendMessage(chat_id, txt)
     }
+
+    deleteMessageId =
+      (await bot.telegram.sendMessage(chat_id, '⏳ Fetching wallet details...'))
+        ?.message_id || 0
 
     const walletReq = await vybeApi.get_wallet_tokens({
       ownerAddress: wallet_address,
@@ -77,6 +79,7 @@ ${tokenDetailsTxt}`
       error?.data?.message || 'Error Occurred'
     )
   } finally {
-    if (deleteId) await bot.telegram.deleteMessage(chat_id, deleteId)
+    if (deleteMessageId && deleteMessageId !== 0)
+      await bot.telegram.deleteMessage(chat_id, deleteMessageId)
   }
 }
