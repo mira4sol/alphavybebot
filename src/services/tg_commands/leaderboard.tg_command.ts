@@ -11,10 +11,15 @@ export const leaderboardCommand = async (ctx: Context) => {
 
   try {
     if (ctx?.message?.chat?.type === 'private')
-      return await ctx.reply('This command can only be used in groups ⛔️')
+      return await ctx.reply('This command can only be used in groups ⛔️', {
+        reply_parameters: { message_id: ctx?.msgId || 0 },
+      })
 
-    deleteMessageId = (await ctx.reply('⏳ Fetching leaderboard...'))
-      ?.message_id
+    deleteMessageId = (
+      await ctx.reply('⏳ Fetching leaderboard...', {
+        reply_parameters: { message_id: ctx?.msgId || 0 },
+      })
+    )?.message_id
 
     const getLeaderBoard = await LeaderboardModel.getGroupLeaderboard(
       ctx?.chat?.id?.toString() || ''

@@ -6,6 +6,7 @@ const LOG_NAME = '[TrendingCommand::Message]'
 export const trendingCommand = async (ctx: Context) => {
   try {
     await ctx.reply('TrendingCommand <Todo>', {
+      reply_parameters: { message_id: ctx?.msgId || 0 },
       reply_markup: {
         inline_keyboard: [tgDeleteButton],
       },

@@ -9,7 +9,9 @@ export const tokenResponse = {
     const chat_id = ctx?.message?.chat?.id?.toString() || ''
 
     let deleteId = (
-      await bot.telegram.sendMessage(chat_id, '⏳ Fetching token details...')
+      await bot.telegram.sendMessage(chat_id, '⏳ Fetching token details...', {
+        reply_parameters: { message_id: ctx?.msgId || 0 },
+      })
     )?.message_id
 
     try {

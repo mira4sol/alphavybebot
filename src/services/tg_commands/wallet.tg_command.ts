@@ -18,11 +18,17 @@ export const walletCommand = async (ctx: Context) => {
       let txt = `❌ Invalid Input!
  └ Use /wallet <wallet address>, e.g. /wallet 5QDwYS1CtHzN1oJ2eij8Crka4D2eJcUavMcyuvwNRM9`
 
-      return await ctx.reply(txt)
+      return await ctx.reply(txt, {
+        reply_parameters: { message_id: ctx?.msgId || 0 },
+      })
     }
 
     deleteMessageId =
-      (await ctx.reply('⏳ Fetching wallet details...'))?.message_id || 0
+      (
+        await ctx.reply('⏳ Fetching wallet details...', {
+          reply_parameters: { message_id: ctx?.msgId || 0 },
+        })
+      )?.message_id || 0
 
     const walletReq = await vybeApi.get_wallet_tokens({
       ownerAddress: wallet_address,

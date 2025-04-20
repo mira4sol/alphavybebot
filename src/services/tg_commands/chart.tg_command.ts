@@ -6,6 +6,7 @@ const LOG_NAME = '[ChartCommand::Message]'
 export const chartCommand = async (ctx: Context) => {
   try {
     await ctx.reply('chartCommand <Todo>', {
+      reply_parameters: { message_id: ctx?.msgId || 0 },
       reply_markup: {
         inline_keyboard: [tgDeleteButton],
       },

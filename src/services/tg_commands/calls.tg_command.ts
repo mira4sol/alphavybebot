@@ -15,10 +15,15 @@ export const callsCommand = async (ctx: Context) => {
 
   try {
     if (ctx?.chat?.type === 'private')
-      return await ctx.reply('This command can only be used in groups ⛔️')
+      return await ctx.reply('This command can only be used in groups ⛔️', {
+        reply_parameters: { message_id: ctx?.msgId || 0 },
+      })
 
-    deleteMessageId = (await ctx.reply('⏳ Fetching last 10 calls...'))
-      ?.message_id
+    deleteMessageId = (
+      await ctx.reply('⏳ Fetching last 10 calls...', {
+        reply_parameters: { message_id: ctx?.msgId || 0 },
+      })
+    )?.message_id
 
     const call = await TokenCallModel.getChatTopCaller(ctx.chat?.id?.toString())
     console.log('calls', call)

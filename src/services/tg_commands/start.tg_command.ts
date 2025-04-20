@@ -22,6 +22,7 @@ export const startCommand = async (ctx: Context) => {
       caption: startMessage(username ?? ''),
       // reply_markup: { inline_keyboard: reply_markup.inline_keyboard },
       parse_mode: 'Markdown',
+      reply_parameters: { message_id: ctx?.msgId || 0 },
       reply_markup: {
         inline_keyboard: [tgDeleteButton],
       },
