@@ -14,14 +14,10 @@ export const messageCommand = async (
 
     const text = payload?.message?.text
 
-    console.log('checking if is mint address')
     if (isMintAddress(text)) {
       return await tokenResponse.tokenDetails(payload)
     }
   } catch (error: any) {
-    if (error?.data?.message === 'Query returned no results') {
-      return await bot.telegram.sendMessage(chat_id, 'Unsupported token 🥹')
-    }
     await bot.telegram.sendMessage(
       chat_id,
       error?.data?.message || 'Error Occurred'

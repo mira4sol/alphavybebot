@@ -6,39 +6,48 @@ import { bot, vybeApi } from '../platform'
 export const tokenResponse = {
   async tokenDetails(payload: TelegramUpdate) {
     const chat_id = payload?.message?.chat?.id?.toString() || ''
-    const mint_address = payload?.message?.text
-    const from = payload?.message?.from
-    const isGroup =
-      payload?.message?.chat?.type === 'group' ||
-      payload?.message?.chat?.type === 'supergroup'
 
-    console.log('fetching token details', mint_address)
-    const tokenDetails = await vybeApi.get_token_details({
-      mintAddress: mint_address,
-    })
-    console.log('Done fetching mint info')
+    let deleteId = (
+      await bot.telegram.sendMessage(chat_id, '⏳ Fetching last 10 calls...')
+    )?.message_id
 
-    console.log('get first caller intel')
-    const firstCaller = isGroup
-      ? await TokenCallModel.insertOrGetFirstCaller({
-          chat_id,
-          username: from?.username || from?.first_name || '',
-          telegram_id: from?.id?.toString(),
-          mint_address,
-          price: tokenDetails?.data?.price,
-          market_cap: tokenDetails?.data?.marketCap,
-        })
-      : undefined
-    console.log('end of first caller intel')
+    try {
+      const mint_address = payload?.message?.text
+      const from = payload?.message?.from
+      const isGroup =
+        payload?.message?.chat?.type === 'group' ||
+        payload?.message?.chat?.type === 'supergroup'
 
-    return await bot.telegram.sendPhoto(
-      chat_id,
-      tokenDetails?.data?.logoUrl || '',
-      {
-        caption: sendTgTokenDetailsMessage(tokenDetails.data, firstCaller),
-        parse_mode: 'Markdown',
-        reply_parameters: { message_id: payload?.message?.message_id },
+      const tokenDetails = await vybeApi.get_token_details({
+        mintAddress: mint_address,
+      })
+
+      const firstCaller = isGroup
+        ? await TokenCallModel.insertOrGetFirstCaller({
+            chat_id,
+            username: from?.username || from?.first_name || '',
+            telegram_id: from?.id?.toString(),
+            mint_address,
+            price: tokenDetails?.data?.price,
+            market_cap: tokenDetails?.data?.marketCap,
+          })
+        : undefined
+
+      return await bot.telegram.sendPhoto(
+        chat_id,
+        tokenDetails?.data?.logoUrl || '',
+        {
+          caption: sendTgTokenDetailsMessage(tokenDetails.data, firstCaller),
+          parse_mode: 'Markdown',
+          reply_parameters: { message_id: payload?.message?.message_id },
+        }
+      )
+    } catch (error: any) {
+      if (error?.data?.message === 'Query returned no results') {
+        return await bot.telegram.sendMessage(chat_id, 'Unsupported token 🥹')
       }
-    )
+    } finally {
+      if (deleteId) await bot.telegram.deleteMessage(chat_id, deleteId)
+    }
   },
 }
