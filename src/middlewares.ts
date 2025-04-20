@@ -3,6 +3,8 @@ import cors from 'cors'
 import express, { Application } from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
+import { ENV } from './utils/constants/env.constants'
+import { bot } from './utils/platform'
 
 /**
  * The `injectMiddleWares` function adds CORS, compression, and helmet middleware to an Express
@@ -18,6 +20,12 @@ export const injectMiddleWares = async (app: Application) => {
   app.use(helmet())
   app.use(express.json())
   app.use(express.urlencoded({ extended: false }))
+  app.use(
+    await bot.createWebhook({
+      domain: ENV.TELEGRAM_HOOK_URL || '',
+      path: '/v1/tg-hook/',
+    })
+  )
   app.use(
     morgan(
       '[:date[clf]] - :method :url :status :res[content-length] - :response-time ms'
