@@ -1,5 +1,6 @@
 import { Controller, Post } from '@/decorators/RouteDecorators'
 import '@/services/telegram.service'
+import { appLogger } from '@/utils/logger.util'
 import { bot } from '@/utils/platform'
 import { Request } from 'express'
 
@@ -7,6 +8,13 @@ import { Request } from 'express'
 export class TelegramHookController {
   @Post('/')
   async triggerTg(request: Request) {
-    bot.handleUpdate(request.body)
+    try {
+      bot.handleUpdate(request.body)
+    } catch (error) {
+      appLogger.error(
+        '[TelegramHookController::triggerTg] Error occurred while handling Telegram update',
+        error
+      )
+    }
   }
 }
