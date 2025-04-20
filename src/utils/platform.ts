@@ -4,20 +4,12 @@ import { ENV } from './constants/env.constants'
 
 export const bot = new Telegraf(ENV.TELEGRAM_TOKEN || '')
 
-bot
-  .launch({
-    webhook: {
-      domain: ENV.TELEGRAM_HOOK_URL || '',
-      path: '/v1/tg-hook',
-    },
-  })
-  .then((value) => {
-    console.log('Bot laucnhed', value)
-  })
-  .catch((error) => {
-    console.log('error launching bot', error)
-  })
-
+bot.launch({
+  webhook: {
+    domain: ENV.TELEGRAM_HOOK_URL || '',
+    path: '/v1/tg-hook/',
+  },
+})
 console.log('tg env', ENV.TELEGRAM_TOKEN)
 console.log('tg web-hook', ENV.TELEGRAM_HOOK_URL || '' + '/v1/tg-hook')
 
