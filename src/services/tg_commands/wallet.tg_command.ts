@@ -1,32 +1,28 @@
-import { TelegramUpdate } from '@/types'
+import { tgDeleteButton } from '@/utils/constants/tg.constants'
 import { vybeFYITokenLink, vybeFYIWalletLink } from '@/utils/links.util'
 import { appLogger } from '@/utils/logger.util'
-import { bot, vybeApi } from '@/utils/platform'
+import { vybeApi } from '@/utils/platform'
 import { isValidSolanaAddress } from '@/utils/solana.lib'
 import { escapeMarkdown, formatDecimalPrice } from '@/utils/string'
+import { Context } from 'telegraf'
 
 const LOG_NAME = '[TelegramCommand::Message]'
 
-export const walletCommand = async (
-  chat_id: string,
-  payload: TelegramUpdate
-) => {
+export const walletCommand = async (ctx: Context) => {
   let deleteMessageId = 0
 
   try {
-    const text = payload?.message?.text
-    const wallet_address = text.split(' ')[1]
+    const wallet_address = ctx.text?.split(' ')[1]
 
     if (!wallet_address || !isValidSolanaAddress(wallet_address?.trim())) {
       let txt = `❌ Invalid Input!
  └ Use /wallet <wallet address>, e.g. /wallet 5QDwYS1CtHzN1oJ2eij8Crka4D2eJcUavMcyuvwNRM9`
 
-      return await bot.telegram.sendMessage(chat_id, txt)
+      return await ctx.reply(txt)
     }
 
     deleteMessageId =
-      (await bot.telegram.sendMessage(chat_id, '⏳ Fetching wallet details...'))
-        ?.message_id || 0
+      (await ctx.reply('⏳ Fetching wallet details...'))?.message_id || 0
 
     const walletReq = await vybeApi.get_wallet_tokens({
       ownerAddress: wallet_address,
@@ -67,19 +63,19 @@ export const walletCommand = async (
 📊 Token Balances
 ${tokenDetailsTxt}`
 
-    return await bot.telegram.sendMessage(chat_id, walletMessageText, {
+    return await ctx.reply(walletMessageText, {
       parse_mode: 'MarkdownV2',
-      reply_parameters: { message_id: payload?.message?.message_id },
+      reply_parameters: { message_id: ctx?.msgId || 0 },
       link_preview_options: { is_disabled: true },
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
     })
   } catch (error: any) {
     appLogger.error('Error fetching wallet balance: ', error)
-    await bot.telegram.sendMessage(
-      chat_id,
-      error?.data?.message || 'Error Occurred'
-    )
+    await ctx.reply(error?.data?.message || 'Error Occurred')
   } finally {
     if (deleteMessageId && deleteMessageId !== 0)
-      await bot.telegram.deleteMessage(chat_id, deleteMessageId)
+      await ctx.deleteMessage(deleteMessageId)
   }
 }

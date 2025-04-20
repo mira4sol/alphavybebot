@@ -1,19 +1,16 @@
-import { TelegramUpdate } from '@/types'
-import { bot } from '@/utils/platform'
+import { tgDeleteButton } from '@/utils/constants/tg.constants'
+import { Context } from 'telegraf'
 
 const LOG_NAME = '[TrendingCommand::Message]'
 
-export const trendingCommand = async (
-  chat_id: string,
-  payload: TelegramUpdate
-) => {
+export const trendingCommand = async (ctx: Context) => {
   try {
-    const text = payload?.message?.text
-    await bot.telegram.sendMessage(chat_id, 'TrendingCommand <Todo>')
+    await ctx.reply('TrendingCommand <Todo>', {
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
+    })
   } catch (error: any) {
-    await bot.telegram.sendMessage(
-      chat_id,
-      error?.data?.message || 'Error Occurred'
-    )
+    await ctx.reply(error?.data?.message || 'Error Occurred')
   }
 }

@@ -1,36 +1,29 @@
 import { LeaderboardModel } from '@/models/leaderboard.model'
-import { TelegramUpdate } from '@/types'
+import { tgDeleteButton } from '@/utils/constants/tg.constants'
 import { tgRedirectToBotLink } from '@/utils/links.util'
 import { appLogger } from '@/utils/logger.util'
-import { bot } from '@/utils/platform'
+import { Context } from 'telegraf'
 
 const LOG_NAME = '[LeaderboardCommand::Message]'
 
-export const leaderboardCommand = async (
-  chat_id: string,
-  payload: TelegramUpdate
-) => {
+export const leaderboardCommand = async (ctx: Context) => {
   let deleteMessageId = 0
 
   try {
-    const text = payload?.message?.text
+    if (ctx?.message?.chat?.type === 'private')
+      return await ctx.reply('This command can only be used in groups ⛔️')
 
-    if (payload?.message?.chat?.type === 'private')
-      return await bot.telegram.sendMessage(
-        chat_id,
-        'This command can only be used in groups ⛔️'
-      )
+    deleteMessageId = (await ctx.reply('⏳ Fetching leaderboard...'))
+      ?.message_id
 
-    deleteMessageId = (
-      await bot.telegram.sendMessage(chat_id, '⏳ Fetching leaderboard...')
-    )?.message_id
-
-    const getLeaderBoard = await LeaderboardModel.getGroupLeaderboard(chat_id)
+    const getLeaderBoard = await LeaderboardModel.getGroupLeaderboard(
+      ctx?.chat?.id?.toString() || ''
+    )
     console.log('leaderboardCommand', getLeaderBoard)
 
     const leaderboardTexts = getLeaderBoard.leaderboard
       .map((item, index) => {
-        const query = `call_${payload?.message?.chat?.id}_${payload?.message?.from?.id}`
+        const query = `call_${ctx?.message?.chat?.id}_${ctx?.message?.from?.id}`
         return `>🟣${index + 1} ${
           item.user?.username
             ? `${tgRedirectToBotLink(item.user?.username, query)}`
@@ -49,21 +42,20 @@ export const leaderboardCommand = async (
 ${leaderboardTexts}`
       : 'No Leaderboard Yet'
 
-    await bot.telegram.sendMessage(chat_id, leaderboardMessagText, {
-      reply_parameters: { message_id: payload?.message?.message_id },
+    await ctx.reply(leaderboardMessagText, {
+      reply_parameters: { message_id: ctx.msgId || 0 },
       parse_mode: 'MarkdownV2',
       link_preview_options: {
         is_disabled: true,
       },
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
     })
   } catch (error: any) {
     appLogger.error('[/leaderboard] - An error occurred', error)
-    await bot.telegram.sendMessage(
-      chat_id,
-      error?.data?.message || 'Error Occurred'
-    )
+    await ctx.reply(error?.data?.message || 'Error Occurred')
   } finally {
-    if (deleteMessageId)
-      await bot.telegram.deleteMessage(chat_id, deleteMessageId)
+    if (deleteMessageId) await ctx.deleteMessage(deleteMessageId)
   }
 }

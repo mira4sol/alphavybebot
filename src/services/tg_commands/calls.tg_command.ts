@@ -1,34 +1,26 @@
 import { TokenCallModel } from '@/models/token-call.model'
-import { TelegramUpdate } from '@/types'
+import { tgDeleteButton } from '@/utils/constants/tg.constants'
 import { vybeFYITokenLink } from '@/utils/links.util'
 import { appLogger } from '@/utils/logger.util'
 import { calculatePriceMultiplierWithEmoji } from '@/utils/number.helper'
-import { bot, vybeApi } from '@/utils/platform'
+import { vybeApi } from '@/utils/platform'
 import { formatLongNumber } from '@/utils/string'
 import { escapeTelegramChar } from '@/utils/telegram.helpers'
+import { Context } from 'telegraf'
 
 const LOG_NAME = '[CallsCommand::Message]'
 
-export const callsCommand = async (
-  chat_id: string,
-  payload: TelegramUpdate
-) => {
+export const callsCommand = async (ctx: Context) => {
   let deleteMessageId = 0
 
   try {
-    const text = payload?.message?.text
+    if (ctx?.chat?.type === 'private')
+      return await ctx.reply('This command can only be used in groups ⛔️')
 
-    if (payload?.message?.chat?.type === 'private')
-      return await bot.telegram.sendMessage(
-        chat_id,
-        'This command can only be used in groups ⛔️'
-      )
+    deleteMessageId = (await ctx.reply('⏳ Fetching last 10 calls...'))
+      ?.message_id
 
-    deleteMessageId = (
-      await bot.telegram.sendMessage(chat_id, '⏳ Fetching last 10 calls...')
-    )?.message_id
-
-    const call = await TokenCallModel.getChatTopCaller(chat_id)
+    const call = await TokenCallModel.getChatTopCaller(ctx.chat?.id?.toString())
     console.log('calls', call)
 
     // let tokenCallsText = ``
@@ -62,24 +54,24 @@ export const callsCommand = async (
 
     const leaderboardTexts = tokenCallsText
       ? `☎️ Last 10 Calls
-└ ${escapeTelegramChar(payload?.message?.chat?.title || '')}
+└ ${escapeTelegramChar(ctx?.chat?.title || '')}
 
 ${tokenCallsText}`
       : 'No Calls Yet'
 
-    await bot.telegram.sendMessage(chat_id, leaderboardTexts, {
+    await ctx.reply(leaderboardTexts, {
       parse_mode: 'MarkdownV2',
       link_preview_options: { is_disabled: true },
-      reply_parameters: { message_id: payload?.message?.message_id },
+      reply_parameters: { message_id: ctx?.msgId || 0 },
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
     })
   } catch (error: any) {
     appLogger.error('Error fetching group calls: ', error)
-    await bot.telegram.sendMessage(
-      chat_id,
-      error?.data?.message || 'Error Occurred'
-    )
+    await ctx.reply(error?.data?.message || 'Error Occurred')
   } finally {
     if (deleteMessageId && deleteMessageId !== 0)
-      await bot.telegram.deleteMessage(chat_id, deleteMessageId)
+      await ctx.deleteMessage(deleteMessageId)
   }
 }

@@ -1,15 +1,12 @@
-import { TelegramUpdate } from '@/types'
 import { startMessage } from '@/utils/constants/tg-message.constant'
+import { tgDeleteButton } from '@/utils/constants/tg.constants'
 import { appLogger } from '@/utils/logger.util'
-import { bot } from '@/utils/platform'
+import { Context } from 'telegraf'
 
 const LOG_NAME = '[StartCommand::Start]'
 
-export const startCommand = async (
-  chat_id: string, // Changed from number
-  payload: TelegramUpdate
-) => {
-  const username = payload?.message?.from?.username
+export const startCommand = async (ctx: Context) => {
+  const username = ctx?.message?.from?.username
 
   // const user = await UserModel.addUserIfNotExists(chat_id)
 
@@ -21,10 +18,13 @@ export const startCommand = async (
 
     const photo_url = 'https://www.pixawallet.live/meta_dark.png'
 
-    await bot.telegram.sendPhoto(chat_id, photo_url, {
+    await ctx.sendPhoto(photo_url, {
       caption: startMessage(username ?? ''),
       // reply_markup: { inline_keyboard: reply_markup.inline_keyboard },
       parse_mode: 'Markdown',
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
     })
   } catch (error: any) {
     appLogger.error(`[${LOG_NAME} ${error.message}]`)
