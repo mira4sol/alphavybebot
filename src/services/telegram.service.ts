@@ -29,6 +29,7 @@ export class TelegramService {
     const chat_id = payload?.message?.chat?.id?.toString() // chat id
 
     if (text?.startsWith('/start')) return await startCommand(chat_id, payload)
+    if (text?.startsWith('/help')) return await startCommand(chat_id, payload)
     if (text?.startsWith('/calls')) return await callsCommand(chat_id, payload)
     if (text?.startsWith('/chart')) return await chartCommand(chat_id, payload)
     if (text?.startsWith('/trending'))

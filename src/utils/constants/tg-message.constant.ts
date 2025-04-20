@@ -8,27 +8,35 @@ import {
 } from '../number.helper'
 import { formatDecimalPrice, formatLongNumber } from '../string'
 
-export const startMessage = (userName: string) => `Hello ${userName} 👋,
+export const startMessage = (userName: string) => `Hello ${userName} 🚀
 
-Welcome to *VybeOnChain* 🚀
+Welcome to *Alpha Vybe* - Your Ultimate Trading Community Bot! 
 
-I'm your dedicated Telegram bot for real-time, on-chain crypto analytics, powered by the Vybe Alpha.
+I'm here to transform your trading experience into an exciting competition. Track wallets & tokens, make calls, and climb the leaderboard! 🏆
 
-Here's what I can do for you:
+*Key Features:*
+🎯 Make token calls and earn points
+📈 Track real-time token metrics
+🏆 Compete on the leaderboard
+🔍 Monitor top trending tokens
+💼 Track wallet activities
 
-*Track Wallets*: Get notified about transactions of specific crypto wallets.
-*Monitor Token Metrics*: Stay updated on key metrics like price changes, volume, and market cap.
-*Receive Whale Alerts*: Be the first to know about significant transactions by large holders.
+*Available Commands:*
+/start - Start your Vybe journey
+/leaderboard - See who's crushing it
+/wallet - Track wallet details
+/calls - View recent token calls
+/chart - Get token price charts
+/tt - Top Solana tokens
+/ttg - View top global tokens
+/trending - Real-time trending tokens
+/help - Get detailed guidance
 
-To get started, try using the following commands:
+Ready to prove you're the ultimate trader? Let's Vybe! 🌟
 
-/track_wallet <wallet_address> - Track a specific wallet.
-/token_metrics <token_symbol> - Get metrics for a specific token.
-/enable_whale_alerts - Turn on notifications for large transactions.
-/help - See a full list of available commands.
+Join the competition, make your calls, and watch your rank rise! Remember - great calls earn points, but poor ones might cost you. May the best trader win! 📊`
 
-Let's dive into the world of on\-chain data with VybeOnChain 📊`
-
+// Rest of the file remains unchanged...
 export const sendTgTokenDetailsMessage = (
   tokenDetails: Partial<GetTokenDetailsResponse200>,
   firstCaller?: TokenCall

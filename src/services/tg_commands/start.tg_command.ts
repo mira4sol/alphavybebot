@@ -1,4 +1,3 @@
-import { UserModel } from '@/models/user.model'
 import { TelegramUpdate } from '@/types'
 import { startMessage } from '@/utils/constants/tg-message.constant'
 import { appLogger } from '@/utils/logger.util'
@@ -12,13 +11,13 @@ export const startCommand = async (
 ) => {
   const username = payload?.message?.from?.username
 
-  const user = await UserModel.addUserIfNotExists(chat_id)
+  // const user = await UserModel.addUserIfNotExists(chat_id)
 
   try {
-    const refID = payload?.message?.text.split(' ')[1]
-    if (refID) {
-      await UserModel.addReferral(refID, chat_id)
-    }
+    // const refID = payload?.message?.text.split(' ')[1]
+    // if (refID) {
+    //   await UserModel.addReferral(refID, chat_id)
+    // }
 
     const photo_url = 'https://www.pixawallet.live/meta_dark.png'
 
