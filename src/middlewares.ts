@@ -20,12 +20,19 @@ export const injectMiddleWares = async (app: Application) => {
   app.use(helmet())
   app.use(express.json())
   app.use(express.urlencoded({ extended: false }))
-  app.use(
-    await bot.createWebhook({
-      domain: ENV.TELEGRAM_HOOK_URL || '',
-      path: '/v1/tg-hook/',
-    })
-  )
+  // app.use(
+  //   await bot.createWebhook({
+  //     domain: ENV.TELEGRAM_HOOK_URL || '',
+  //     path: '/alphavybe/v1/tg-hook/',
+  //     allowed_updates: [
+  //       'callback_query',
+  //       'channel_post',
+  //       'chat_boost',
+  //       'message',
+  //       'inline_query',
+  //     ],
+  //   })
+  // )
   app.use(
     morgan(
       '[:date[clf]] - :method :url :status :res[content-length] - :response-time ms'
