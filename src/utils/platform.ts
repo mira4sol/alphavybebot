@@ -11,6 +11,9 @@ bot.launch({
   },
 })
 
+console.log('tg env', ENV.TELEGRAM_TOKEN)
+console.log('tg web-hook', ENV.TELEGRAM_HOOK_URL || '' + '/v1/tg-hook')
+
 bot.on('message', (ctx) => {
   console.log(ctx.message)
 
