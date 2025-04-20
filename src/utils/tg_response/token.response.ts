@@ -8,7 +8,7 @@ export const tokenResponse = {
     const chat_id = payload?.message?.chat?.id?.toString() || ''
 
     let deleteId = (
-      await bot.telegram.sendMessage(chat_id, '⏳ Fetching last 10 calls...')
+      await bot.telegram.sendMessage(chat_id, '⏳ Fetching token details...')
     )?.message_id
 
     try {
