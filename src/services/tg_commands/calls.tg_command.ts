@@ -13,6 +13,10 @@ export const callsCommand = async (
   chat_id: string,
   payload: TelegramUpdate
 ) => {
+  let deleteId = (
+    await bot.telegram.sendMessage(chat_id, '⏳ Fetching last 10 calls...')
+  )?.message_id
+
   try {
     const text = payload?.message?.text
 
@@ -66,5 +70,7 @@ ${tokenCallsText}`
       chat_id,
       error?.data?.message || 'Error Occurred'
     )
+  } finally {
+    if (deleteId) await bot.telegram.deleteMessage(chat_id, deleteId)
   }
 }

@@ -11,6 +11,10 @@ export const walletCommand = async (
   chat_id: string,
   payload: TelegramUpdate
 ) => {
+  let deleteId = (
+    await bot.telegram.sendMessage(chat_id, '⏳ Fetching wallet details...')
+  )?.message_id
+
   try {
     const text = payload?.message?.text
     const wallet_address = text.split(' ')[1]
@@ -72,5 +76,7 @@ ${tokenDetailsTxt}`
       chat_id,
       error?.data?.message || 'Error Occurred'
     )
+  } finally {
+    if (deleteId) await bot.telegram.deleteMessage(chat_id, deleteId)
   }
 }

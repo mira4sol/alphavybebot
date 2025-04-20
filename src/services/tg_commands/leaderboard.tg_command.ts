@@ -10,6 +10,10 @@ export const leaderboardCommand = async (
   chat_id: string,
   payload: TelegramUpdate
 ) => {
+  let deleteId = (
+    await bot.telegram.sendMessage(chat_id, '⏳ Fetching leaderboard...')
+  )?.message_id
+
   try {
     const text = payload?.message?.text
 
@@ -56,5 +60,7 @@ ${leaderboardTexts}`
       chat_id,
       error?.data?.message || 'Error Occurred'
     )
+  } finally {
+    if (deleteId) await bot.telegram.deleteMessage(chat_id, deleteId)
   }
 }
