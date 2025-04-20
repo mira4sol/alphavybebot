@@ -14,6 +14,7 @@ export const messageCommand = async (
 
     const text = payload?.message?.text
 
+    console.log('checking if is mint address')
     if (isMintAddress(text)) {
       return await tokenResponse.tokenDetails(payload)
     }

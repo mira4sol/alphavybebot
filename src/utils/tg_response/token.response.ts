@@ -12,10 +12,13 @@ export const tokenResponse = {
       payload?.message?.chat?.type === 'group' ||
       payload?.message?.chat?.type === 'supergroup'
 
+    console.log('fetching token details', mint_address)
     const tokenDetails = await vybeApi.get_token_details({
       mintAddress: mint_address,
     })
+    console.log('Done fetching mint info')
 
+    console.log('get first caller intel')
     const firstCaller = isGroup
       ? await TokenCallModel.insertOrGetFirstCaller({
           chat_id,
@@ -26,6 +29,7 @@ export const tokenResponse = {
           market_cap: tokenDetails?.data?.marketCap,
         })
       : undefined
+    console.log('end of first caller intel')
 
     return await bot.telegram.sendPhoto(
       chat_id,

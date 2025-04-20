@@ -50,7 +50,7 @@ export const callsCommand = async (
 
     const leaderboardTexts = tokenCallsText
       ? `☎️ Last 10 Calls
-└ ${payload?.message?.chat?.title}
+└ ${escapeTelegramChar(payload?.message?.chat?.title || '')}
 
 ${tokenCallsText}`
       : 'No Calls Yet'
