@@ -3,7 +3,7 @@ import { vybeFYITokenLink } from '@/utils/links.util'
 import { vybeApi } from '@/utils/platform'
 import { isValidSolanaAddress } from '@/utils/solana.lib'
 import { GetTokenTradeOhlcResponse200 } from '@api/vybe-api'
-import { createCanvas } from '@napi-rs/canvas'
+import { createCanvas, GlobalFonts } from '@napi-rs/canvas'
 import { Context } from 'telegraf'
 
 const LOG_NAME = '[ChartCommand::Message]'
@@ -105,6 +105,8 @@ async function generateCandlestickChart(
 
   const canvas = createCanvas(width, height)
   const ctx = canvas.getContext('2d')
+
+  console.log('font families', GlobalFonts.families)
 
   // Fill background
   ctx.fillStyle = '#111111'
