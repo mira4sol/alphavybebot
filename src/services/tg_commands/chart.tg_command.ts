@@ -112,7 +112,7 @@ async function generateCandlestickChart(
 
   // Draw title
   ctx.fillStyle = '#FFFFFF'
-  ctx.font = 'bold 16px sans-serif'
+  ctx.font = '16px sans-serif'
   // ctx.font = 'bold 16px Arial'
   ctx.textAlign = 'center'
   ctx.fillText(title, width / 2, 20)
