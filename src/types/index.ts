@@ -10,8 +10,8 @@ import {
 import { TelegramUpdate } from './telegram.interface'
 import {
   VybeConfigureMessage,
-  VybeOraclePrice,
   VybeOraclePriceFilter,
+  VybeOraclePriceMessage,
   VybeSocketMessage,
   VybeTradeFilter,
   VybeTradesSocketMessage,
@@ -30,8 +30,8 @@ export {
   RouteOptions,
   TelegramUpdate,
   VybeConfigureMessage,
-  VybeOraclePrice,
   VybeOraclePriceFilter,
+  VybeOraclePriceMessage,
   VybeSocketMessage,
   VybeTradeFilter,
   VybeTradesSocketMessage,

@@ -71,7 +71,7 @@ export interface VybeTransferSocketMessage {
   id: number[]
 }
 
-export interface VybeOraclePrice {
+export interface VybeOraclePriceMessage {
   priceFeedAccount: string
   lastUpdated: number
   validSlot: number
@@ -84,7 +84,7 @@ export interface VybeOraclePrice {
 export type VybeSocketMessage =
   | VybeTradesSocketMessage
   | VybeTransferSocketMessage
-  | VybeOraclePrice
+  | VybeOraclePriceMessage
 
 // Configuration options for the WebSocket client
 export interface VybeWebSocketConfig {

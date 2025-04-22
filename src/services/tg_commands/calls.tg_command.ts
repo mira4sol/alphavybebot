@@ -74,7 +74,14 @@ ${tokenCallsText}`
     })
   } catch (error: any) {
     appLogger.error('Error fetching group calls: ', error)
-    await ctx.reply(error?.data?.message || 'Error Occurred')
+    const msg =
+      error?.data?.message || error?.message || 'Unable to fetch calls'
+    await ctx.reply('❌ Oh chim 🥹\n' + msg, {
+      reply_parameters: { message_id: ctx?.msgId || 0 },
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
+    })
   } finally {
     if (deleteMessageId && deleteMessageId !== 0)
       await ctx.deleteMessage(deleteMessageId)

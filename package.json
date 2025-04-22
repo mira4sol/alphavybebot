@@ -16,6 +16,7 @@
   "dependencies": {
     "@api/vybe-api": "file:.api/apis/vybe-api",
     "@metaplex-foundation/js": "^0.20.1",
+    "@napi-rs/canvas": "^0.1.69",
     "@prisma/client": "^6.5.0",
     "@solana/spl-token": "^0.4.13",
     "@supabase/supabase-js": "^2.49.3",

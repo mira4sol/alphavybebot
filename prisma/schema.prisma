@@ -66,6 +66,21 @@ model TokenCall {
   @@index([telegram_id, mint_address])
 }
 
+model Subscription {
+  id           String      @id @default(cuid())
+  chat_id      String
+  address      String
+  address_type AddressType
+  alert_type   AlertType   @default(ADDRESS_ACTIVITY)
+  threshold    Float? // For price/mcap thresholds
+  triggered    Boolean     @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([chat_id, address])
+}
+
 model LeaderboardEntry {
   id               String @id @default(cuid())
   telegram_id      String
@@ -126,4 +141,17 @@ model Transaction {
   @@index([base_mint])
   @@index([quote_mint])
   @@index([price])
+}
+
+enum AddressType {
+  Wallet
+  Mint
+}
+
+enum AlertType {
+  PRICE_ABOVE
+  PRICE_BELOW
+  MCAP_ABOVE
+  MCAP_BELOW
+  ADDRESS_ACTIVITY
 }

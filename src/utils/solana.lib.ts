@@ -84,6 +84,8 @@ export const isValidSolanaAddress = (address: string): boolean => {
   try {
     if (!address) return false
 
+    if (address === SOLANA_ADDRESSES.SYSTEM_PROGRAM) return true
+
     const decoded = bs58.decode(address)
 
     // Solana public keys are 32 bytes long

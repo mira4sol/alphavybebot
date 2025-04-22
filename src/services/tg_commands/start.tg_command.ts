@@ -29,6 +29,13 @@ export const startCommand = async (ctx: Context) => {
     })
   } catch (error: any) {
     appLogger.error(`[${LOG_NAME} ${error.message}]`)
+    const msg = error?.data?.message || error?.message || 'An error occurred'
+    await ctx.reply('❌ Oh chim 🥹\n' + msg, {
+      reply_parameters: { message_id: ctx?.msgId || 0 },
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
+    })
   }
 }
 

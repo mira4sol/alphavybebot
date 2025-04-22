@@ -47,6 +47,9 @@ const bootstrap = async () => {
       type: 'configure',
       filters: {
         // trades: [
+        // { tokenMintAddress: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN' },
+        // ],
+        // trades: [
         // { tokenMintAddress: '51X4B3CH1zsQiD8tq74PkdDs5b29rrNFyNC37SM1pump' },
         // ],
         // trades: [

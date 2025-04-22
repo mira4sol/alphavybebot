@@ -1,4 +1,7 @@
 import { VybeSocketMessage } from '@/types'
+import { handleOraclePriceMessages } from './ws_messages/oracle.vybe_message'
+import { handleTradesMessages } from './ws_messages/trades.vybe_message'
+import { handleTransferMessages } from './ws_messages/transfer.vybe_message'
 
 export const vybeWssCustomMessageHandler = (message: VybeSocketMessage) => {
   // Custom processing logic
@@ -14,23 +17,8 @@ export const vybeWssCustomMessageHandler = (message: VybeSocketMessage) => {
   }
   // This is a VybeOraclePrice
   else if ('priceFeedAccount' in message && 'price' in message) {
-    console.log('Oracle price message:', message)
+    handleOraclePriceMessages(message)
   } else {
     console.log('Unknown message type:', message)
   }
-}
-
-const handleTradesMessages = (message: VybeSocketMessage) => {
-  // Handle trade messages
-  console.log('Trade message:', message)
-}
-
-const handleTransferMessages = (message: VybeSocketMessage) => {
-  // Handle transfer messages
-  console.log('Transfer message:', message)
-}
-
-const handleOraclePriceMessages = (message: VybeSocketMessage) => {
-  // Handle oracle price messages
-  console.log('Oracle price message:', message)
 }

@@ -1,5 +1,4 @@
-import { TelegramUpdate } from '@/types'
-import { bot } from '@/utils/platform'
+import { tgDeleteButton } from '@/utils/constants/tg.constants'
 import { isMintAddress } from '@/utils/solana.helper'
 import { tokenResponse } from '@/utils/tg_response/token.response'
 import { Context } from 'telegraf'
@@ -13,6 +12,12 @@ export const messageCommand = async (ctx: Context) => {
       return await tokenResponse.tokenDetails(ctx)
     }
   } catch (error: any) {
-    await ctx.reply(error?.data?.message || 'Error Occurred')
+    const msg = error?.data?.message || error?.message || 'Unknown error'
+    await ctx.reply('❌ Oh chim 🥹\n' + msg, {
+      reply_parameters: { message_id: ctx?.msgId || 0 },
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
+    })
   }
 }

@@ -2,8 +2,28 @@ start - Start your Vybe journey
 leaderboard - See who's crushing it
 wallet - Track wallet details
 calls - View recent token calls
+wa - (Wallet Alert): Get wallet alerts by subscribing to an address
+ta - (Token Alert): Get token alerts by subscribing to a mint address
+ca - (Cancel Alert): Cancel a token or wallet alert subscription
+trending - Real-time trending tokens
+help - Get detailed guidance
+
+
 chart - Get token price charts
 tt - Top Solana tokens
 ttg - View top global tokens
-trending - Real-time trending tokens
-help - Get detailed guidance
+
+
+
+Name: Alpha Vybe
+About: Introducing a fun and interactive way to engage with trading in your community.
+Description: Turn your trading community into a competitive arena! This bot introduces a dynamic points system, rewarding users for being the first to call out potential trades. Climb the ranks on the leaderboard, but be warned – if your call doesn't pan out, you might lose points! It's all about skill, speed, and a bit of luck.
+
+🚀 Call tokens
+🏆 Earn points for first snipes
+📉 Lose points if your bags don’t cook
+📈 Climb the leaderboard & flex your rank
+Description picture: 🚫 no description picture
+Botpic: 🖼 has a botpic
+Commands: 9 commands
+Privacy Policy: 🚫

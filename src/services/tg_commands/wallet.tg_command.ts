@@ -79,7 +79,14 @@ ${tokenDetailsTxt}`
     })
   } catch (error: any) {
     appLogger.error('Error fetching wallet balance: ', error)
-    await ctx.reply(error?.data?.message || 'Error Occurred')
+    const msg =
+      error?.data?.message || error?.message || 'Unable to fetch wallet details'
+    await ctx.reply('❗️ Oh chim 🥹\n' + msg, {
+      reply_parameters: { message_id: ctx?.msgId || 0 },
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
+    })
   } finally {
     if (deleteMessageId && deleteMessageId !== 0)
       await ctx.deleteMessage(deleteMessageId)

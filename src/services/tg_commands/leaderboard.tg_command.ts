@@ -13,6 +13,9 @@ export const leaderboardCommand = async (ctx: Context) => {
     if (ctx?.message?.chat?.type === 'private')
       return await ctx.reply('This command can only be used in groups ⛔️', {
         reply_parameters: { message_id: ctx?.msgId || 0 },
+        reply_markup: {
+          inline_keyboard: [tgDeleteButton],
+        },
       })
 
     deleteMessageId = (
@@ -59,7 +62,14 @@ ${leaderboardTexts}`
     })
   } catch (error: any) {
     appLogger.error('[/leaderboard] - An error occurred', error)
-    await ctx.reply(error?.data?.message || 'Error Occurred')
+    const msg =
+      error?.data?.message || error?.message || 'Unable to fetch leaderboard'
+    await ctx.reply('❌ Oh chim 🥹\n' + msg, {
+      reply_parameters: { message_id: ctx?.msgId || 0 },
+      reply_markup: {
+        inline_keyboard: [tgDeleteButton],
+      },
+    })
   } finally {
     if (deleteMessageId) await ctx.deleteMessage(deleteMessageId)
   }
