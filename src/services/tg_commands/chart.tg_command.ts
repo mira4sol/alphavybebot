@@ -106,16 +106,13 @@ async function generateCandlestickChart(
   const canvas = createCanvas(width, height)
   const ctx = canvas.getContext('2d')
 
-  console.log('font families', GlobalFonts.families)
-
   // Fill background
   ctx.fillStyle = '#111111'
   ctx.fillRect(0, 0, width, height)
 
   // Draw title
   ctx.fillStyle = '#FFFFFF'
-  ctx.font = '16px sans-serif'
-  // ctx.font = 'bold 16px Arial'
+  ctx.font = 'bold 16px Arial'
   ctx.textAlign = 'center'
   ctx.fillText(title, width / 2, 20)
 
@@ -249,9 +246,12 @@ async function generateCandlestickChart1(
   ctx.fillStyle = '#111111'
   ctx.fillRect(0, 0, width, height)
 
+  console.log('font families', GlobalFonts.families)
+
   // Draw title with timeframe
   ctx.fillStyle = '#FFFFFF'
-  ctx.font = 'bold 16px Arial'
+  ctx.font = '16px sans-serif'
+  // ctx.font = 'bold 16px Arial'
   ctx.textAlign = 'center'
   ctx.fillText(`${title} (${timeframe})`, width / 2, 20)
 
