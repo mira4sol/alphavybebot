@@ -53,8 +53,8 @@ export const chartCommand = async (ctx: Context) => {
 
     const chartBuffer = await generateCandlestickChart1(
       token_ohlc,
-      'sol/jup',
-      '1d'
+      '',
+      '1d price change'
     )
     // const chartBuffer = await generateCandlestickChart(token_ohlc, '')
 

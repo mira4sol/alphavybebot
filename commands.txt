@@ -5,11 +5,11 @@ calls - View recent token calls
 wa - (Wallet Alert): Get wallet alerts by subscribing to an address
 ta - (Token Alert): Get token alerts by subscribing to a mint address
 ca - (Cancel Alert): Cancel a token or wallet alert subscription
+chart - Get token price charts
 trending - Real-time trending tokens
 help - Get detailed guidance
 
 
-chart - Get token price charts
 tt - Top Solana tokens
 ttg - View top global tokens
 
