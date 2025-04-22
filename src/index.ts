@@ -4,6 +4,7 @@ import 'reflect-metadata' // Used so that we can run this script directly from t
 import { injectMiddleWares } from './middlewares'
 import { registerRoutes } from './routes'
 import { vybeWssCustomMessageHandler } from './services/vybe-socket.service'
+import { registerFonts } from './utils/canvas.util'
 import { ENV } from './utils/constants/env.constants'
 import { appLogger } from './utils/logger.util'
 import { prisma } from './utils/prisma.helper'
@@ -77,6 +78,8 @@ const bootstrap = async () => {
 }
 
 bootstrap()
+// Call this before starting your bot
+registerFonts()
 
 /* This code block is checking if the Node environment is set to 'production'. If it is, then it sets
 up a listener for the 'SIGTERM' signal. When a 'SIGTERM' signal is received, it logs a message
