@@ -6,7 +6,7 @@ import * as https from 'https'
 import { join } from 'path'
 
 // Function to download and install a font
-export const setupFont = () => {
+export const setupFont = async () => {
   const fontDir = join(process.cwd(), 'assets', 'fonts')
   const fontPath = join(fontDir, 'OpenSans-Regular.ttf')
 
