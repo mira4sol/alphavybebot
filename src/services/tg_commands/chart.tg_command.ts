@@ -250,7 +250,7 @@ async function generateCandlestickChart1(
 
   // Draw title with timeframe
   ctx.fillStyle = '#FFFFFF'
-  ctx.font = '16px sans-serif'
+  ctx.font = '16px OpenSans'
   // ctx.font = 'bold 16px Arial'
   ctx.textAlign = 'center'
   ctx.fillText(`${title} (${timeframe})`, width / 2, 20)
@@ -281,7 +281,8 @@ async function generateCandlestickChart1(
 
   // Draw Y-axis labels
   ctx.fillStyle = '#AAAAAA'
-  ctx.font = '12px Arial'
+  // ctx.font = '12px Arial'
+  ctx.font = '12px OpenSans'
   ctx.textAlign = 'right'
 
   for (let i = 0; i <= 5; i++) {
@@ -336,7 +337,8 @@ async function generateCandlestickChart1(
 
   // X-axis time labels
   ctx.fillStyle = '#AAAAAA'
-  ctx.font = '10px Arial'
+  // ctx.font = '10px Arial'
+  ctx.font = '10px OpenSans'
   ctx.textAlign = 'center'
 
   // Show fewer x-axis labels to avoid crowding
