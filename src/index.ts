@@ -21,6 +21,7 @@ const bootstrap = async () => {
 
   const PORT = ENV.PORT || 5000
 
+  await setupFont()
   injectMiddleWares(app)
   registerRoutes(app)
 
@@ -72,8 +73,6 @@ const bootstrap = async () => {
   })
 
   wsClient.connect()
-
-  await setupFont()
 
   // Later, when needed:
   // wsClient.disconnect()
