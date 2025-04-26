@@ -10,12 +10,12 @@ export class UserModel {
     telegramId: string, // Changed from number
     username?: string
   ): Promise<TgUser> {
-    console.log(
-      'add user payload, telegram:',
-      telegramId,
-      'username:',
-      username
-    )
+    // console.log(
+    //   'add user payload, telegram:',
+    //   telegramId,
+    //   'username:',
+    //   username
+    // )
     try {
       const user = await prisma.tgUser.upsert({
         where: {

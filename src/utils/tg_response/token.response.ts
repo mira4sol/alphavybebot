@@ -1,5 +1,7 @@
 import { TokenCallModel } from '@/models/token-call.model'
+import { RugResponse } from '@/types/rug.interface'
 import { Context } from 'telegraf'
+import { rugRequests } from '../api_requests/rug.request'
 import { sendTgTokenDetailsMessage } from '../constants/tg-message.constant'
 import { tgDeleteButton } from '../constants/tg.constants'
 import { bot, vybeApi } from '../platform'
@@ -24,6 +26,14 @@ export const tokenResponse = {
         mintAddress: mint_address,
       })
 
+      const rugReq = await rugRequests.getTokenReport(
+        tokenDetails?.data?.mintAddress
+      )
+
+      // if (!rugReq.success) throw new Error(rugReq.message)
+
+      const rugData = rugReq.data ? (rugReq.data as RugResponse) : undefined
+
       const firstCaller = isGroup
         ? await TokenCallModel.insertOrGetFirstCaller({
             chat_id,
@@ -35,18 +45,38 @@ export const tokenResponse = {
           })
         : undefined
 
-      return await ctx.replyWithPhoto(tokenDetails?.data?.logoUrl || '', {
-        caption: sendTgTokenDetailsMessage(tokenDetails.data, firstCaller),
-        parse_mode: 'Markdown',
+      return await ctx.replyWithPhoto(
+        tokenDetails?.data?.logoUrl || rugData?.fileMeta?.image || '',
+        {
+          caption: sendTgTokenDetailsMessage(
+            tokenDetails.data,
+            firstCaller,
+            rugData
+          ),
+          parse_mode: 'Markdown',
+          reply_parameters: { message_id: ctx?.msgId || 0 },
+          reply_markup: {
+            inline_keyboard: [tgDeleteButton],
+          },
+        }
+      )
+    } catch (error: any) {
+      if (error?.data?.message === 'Query returned no results') {
+        return await bot.telegram.sendMessage(chat_id, 'Unsupported token 🥹', {
+          reply_parameters: { message_id: ctx?.msgId || 0 },
+          reply_markup: {
+            inline_keyboard: [tgDeleteButton],
+          },
+        })
+      }
+      const msg =
+        error?.data?.message || error?.message || 'Unable to get chart'
+      await ctx.reply(msg, {
         reply_parameters: { message_id: ctx?.msgId || 0 },
         reply_markup: {
           inline_keyboard: [tgDeleteButton],
         },
       })
-    } catch (error: any) {
-      if (error?.data?.message === 'Query returned no results') {
-        return await bot.telegram.sendMessage(chat_id, 'Unsupported token 🥹')
-      }
     } finally {
       if (deleteId) await bot.telegram.deleteMessage(chat_id, deleteId)
     }

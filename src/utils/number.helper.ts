@@ -1,3 +1,18 @@
+export function formatNumber(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'decimal',
+    maximumFractionDigits: 0,
+  }).format(amount)
+}
+
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(amount)
+}
+
 export const calculatePriceChange = (
   currentPrice: number,
   comparedPrice: number

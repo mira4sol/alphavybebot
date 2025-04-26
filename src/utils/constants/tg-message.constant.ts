@@ -1,10 +1,12 @@
 // import { GetTokenDetailsResponse200 } from '.api/apis/vybe-api/types'
+import { Risk, RugResponse, TokenHolder } from '@/types/rug.interface'
 import { GetTokenDetailsResponse200 } from '@api/vybe-api'
 import { TokenCall } from '@prisma/client'
 import { vybeFYITokenLink } from '../links.util'
 import {
   calculatePriceChangeWithSymbol,
   calculatePriceMultiplierWithEmoji,
+  formatNumber,
 } from '../number.helper'
 import { formatDecimalPrice, formatLongNumber } from '../string'
 
@@ -39,9 +41,11 @@ Join the competition, make your calls, and watch your rank rise! Remember - grea
 // Rest of the file remains unchanged...
 export const sendTgTokenDetailsMessage = (
   tokenDetails: Partial<GetTokenDetailsResponse200>,
-  firstCaller?: TokenCall
+  firstCaller?: TokenCall,
+  rugData?: RugResponse
 ) => {
   console.log('tokenDetails', tokenDetails)
+
   // console.log('caller', firstCaller)
   const priceChange = calculatePriceChangeWithSymbol(
     tokenDetails?.price || 0,
@@ -67,26 +71,73 @@ export const sendTgTokenDetailsMessage = (
       )}\]\n`
     : ''
 
+  const rugMessage = rugResponse
+    ? rugResponse({
+        score: rugData?.score_normalised || 0,
+        holders: rugData?.totalHolders || 0,
+        rugged: rugData?.rugged || false,
+        verified: tokenDetails?.verified || false,
+        risks: rugData?.risks || [],
+        top_holders: rugData?.topHolders || [],
+      })
+    : ''
+
   return `🟣*${tokenDetails.name || 'Unknown'} (${
     tokenDetails.symbol || 'Unknown'
   })*
 
 *Token Details* 📊
 ├ Price:   *$${formatDecimalPrice(
-    tokenDetails.price || 0,
+    tokenDetails.price || rugData?.price || 0,
     5
   )}* (${priceChange} 24h)
 ├ MC:   *$${formatLongNumber(tokenDetails?.marketCap || 0) || 'Unknown'}*
+├ Liquidity:   *$${
+    formatLongNumber(rugData?.totalMarketLiquidity || 0) || 'Unknown'
+  }*
 ├ Supply:   *${formatLongNumber(tokenDetails?.currentSupply || 0) || 'Unknown'}*
-├ Vol (24h):   *$${
+└ Vol (24h):   *$${
     formatLongNumber(tokenDetails.usdValueVolume24h || 0) || 'Unknown'
   }*
-└ *Verified:* ${tokenDetails.verified ? '🟢' : '🔴'}
 ${firstCallerMessage}
+${rugMessage}
 ${tokenDetails.mintAddress || 'Unknown'}
 └${vybeFYITokenLink(
     'Analyze with Vybe',
     tokenDetails?.mintAddress || 'Unknown'
   )}
 `
+}
+
+const rugResponse = ({
+  holders,
+  score,
+  verified,
+  rugged,
+  risks,
+  top_holders,
+}: {
+  holders: number
+  score: number
+  verified: boolean
+  rugged: boolean
+  risks: Risk[]
+  top_holders: TokenHolder[]
+}) => {
+  const riskText = risks
+    .map((risk) => `⚠️ ${risk.level}: ${risk.description}`)
+    .join('\n')
+
+  console.log('top holders', top_holders)
+
+  const insiders = top_holders.filter((holder) => holder.insider).length
+
+  return `Risk Analyses ⚠️
+├ *score:*    ${score}/10
+├ *holders:*  ${formatNumber(holders)}
+├ *insiders:* ${formatNumber(insiders)}
+├ *rugged:*   ${rugged ? '🔴' : '🟢'}
+└ *Verified:* ${verified ? '🟢' : '🔴'}
+${riskText}
+  `
 }
