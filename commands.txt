@@ -7,6 +7,7 @@ ta - (Token Alert): Get token alerts by subscribing to a mint address
 ca - (Cancel Alert): Cancel a token or wallet alert subscription
 chart - Get token price charts
 trending - Real-time trending tokens
+pro - Go Premium and unlock perks
 help - Get detailed guidance
 
 

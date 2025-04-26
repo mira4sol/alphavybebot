@@ -1,4 +1,5 @@
 import { apiResponse, httpRequest } from '../api.helpers'
+import { ENV } from '../constants/env.constants'
 
 export const rugRequests = {
   getTokenReport: async (mint_address: string) => {
@@ -6,8 +7,7 @@ export const rugRequests = {
       const url = `https://api.rugcheck.xyz/v1/tokens/${mint_address}/report`
       const res = await httpRequest().get(url, {
         headers: {
-          Authorization:
-            'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDU4NDgxMTQsImlkIjoiR2dpRGNENENyWm8yejdxa0JrNk5vWFM1TkxkaGVuNlQxVTlpaGJ1TVJBWEwifQ.mUf73U1nWztKjlxKGXR3HHzqc99Q2UnIfpoOiI2DWMo',
+          Authorization: 'Bearer ' + ENV.RUGCHECKER_API_KEY,
         },
       })
 

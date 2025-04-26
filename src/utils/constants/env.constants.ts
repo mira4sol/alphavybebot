@@ -10,4 +10,5 @@ export const ENV = {
   TELEGRAM_CONNECTION_TYPE: process.env.TELEGRAM_CONNECTION_TYPE || 'webhook',
   VIBE_API_KEY: process.env.VIBE_API_KEY,
   ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
+  RUGCHECKER_API_KEY: process.env.RUGCHECKER_API_KEY,
 }
