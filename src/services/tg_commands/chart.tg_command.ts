@@ -164,11 +164,11 @@ async function generateCandlestickChart3(
 
   // Since fonts might be an issue, we'll use simple rectangles for header
   // Symbol and timeframe
-  ctx.font = '22px sans-serif'
+  ctx.font = '22px OpenSans'
   ctx.textAlign = 'left'
   ctx.fillText(`${tokenInfo.symbol}/SOL`, 30, 35)
 
-  ctx.font = '16px sans-serif'
+  ctx.font = '16px OpenSans'
   ctx.fillStyle = '#999999'
   ctx.fillText(`(${timeframe})`, 30 + (tokenInfo.symbol.length + 3.5) * 15, 35)
 
@@ -177,7 +177,7 @@ async function generateCandlestickChart3(
   const changeColor = tokenInfo.changePercentage >= 0 ? '#44DD44' : '#FF4444'
   const changeSymbol = tokenInfo.changePercentage >= 0 ? '+' : ''
 
-  ctx.font = '16px sans-serif'
+  ctx.font = '16px OpenSans'
   ctx.fillStyle = '#FFFFFF'
   ctx.fillText(
     `Price: $${formatDecimalPrice(tokenInfo.price, 5)}`,
