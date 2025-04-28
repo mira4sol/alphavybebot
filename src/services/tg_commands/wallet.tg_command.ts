@@ -52,14 +52,30 @@ export const walletCommand = async (ctx: Context) => {
     const wallet_balance = walletReq.data
     console.log('wallet_balance', wallet_balance)
 
+    const solValue = Number(
+      wallet_balance?.data?.find((i) => i.symbol === 'SOL')?.amount || 0
+    )
+
+    let wallet
+
+    if (ctx?.chat?.type === 'private') {
+      wallet = await WalletModel.findWallet(ctx.from?.id?.toString() || '')
+    }
+
+    const isYours = wallet?.public_key === wallet_address
     const isEmptyAndYours =
-      Number(wallet_balance.stakedSolBalance) === 0 ||
-      Number(wallet_balance.stakedSolBalance) < 0.01
+      isYours && (Number(solValue) === 0 || Number(solValue) < 0.01)
 
     let balanceEmptyText = isEmptyAndYours
       ? `\n\n⚠️ Low SOL Balance Detected
 └ To start trading, please fund this wallet:
-   ${wallet_address}
+   \`${wallet_address}\`
+
+💡 SOL is required for transaction fees`
+      : ``
+
+    let tipText = isYours
+      ? `\n\n\`${wallet_address}\`
 
 💡 SOL is required for transaction fees`
       : ''
@@ -86,9 +102,11 @@ export const walletCommand = async (ctx: Context) => {
       Number(wallet_balance?.totalTokenValueUsd1dChange).toFixed(2)
     )}%\\)
 ├ *Staked SOL*: $${escapeMarkdown(wallet_balance?.activeStakedSolBalanceUsd)}
-${isEmptyAndYours ? '└' : '├'} *Total token count*: ${escapeMarkdown(
+${
+  isEmptyAndYours || wallet_balance?.data?.length === 0 ? '└' : '├'
+} *Total token count*: ${escapeMarkdown(
       wallet_balance?.totalTokenCount?.toString() || '0'
-    )}${balanceEmptyText}
+    )}${balanceEmptyText || tipText}
 ${tokenDetailsTxt}`
     // └ ${vybeFYIWalletLink('*Analyze wallet with vybe*', wallet_address)}
     return await ctx.reply(walletMessageText, {
