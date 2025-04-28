@@ -9,6 +9,8 @@ export const ENV = {
   TELEGRAM_HOOK_URL_PATH: process.env.TELEGRAM_HOOK_URL_PATH,
   TELEGRAM_CONNECTION_TYPE: process.env.TELEGRAM_CONNECTION_TYPE || 'webhook',
   VIBE_API_KEY: process.env.VIBE_API_KEY,
-  ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
+  ENCRYPTION_KEY: process.env.ENCRYPTION_KEY || '',
   RUGCHECKER_API_KEY: process.env.RUGCHECKER_API_KEY,
+  NODE_ENV: process.env.NODE_ENV,
+  RPC_URL: process.env.RPC_URL || 'https://api.mainnet-beta.solana.com',
 }

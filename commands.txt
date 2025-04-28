@@ -9,6 +9,7 @@ chart - Get token price charts
 trending - Real-time trending tokens
 pro - Go Premium and unlock perks
 help - Get detailed guidance
+settings - Bot settings
 
 
 tt - Top Solana tokens

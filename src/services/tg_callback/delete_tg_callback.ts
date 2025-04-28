@@ -1,9 +1,6 @@
-import { Context } from 'telegraf'
-import { CallbackQuery, Update } from 'telegraf/typings/core/types/typegram'
+import { TelegrafCallbackContext } from '@/types/telegram.interface'
 
-export const deleteMessageCallback = async (
-  ctx: Context<Update.CallbackQueryUpdate<CallbackQuery>>
-) => {
+export const deleteMessageCallback = async (ctx: TelegrafCallbackContext) => {
   try {
     const callbackQuery = ctx.update.callback_query
     const originalUserId = callbackQuery?.from?.id

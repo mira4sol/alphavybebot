@@ -1,17 +1,18 @@
 import {
-  Cluster,
-  clusterApiUrl,
   Connection,
   PublicKey,
   SystemProgram,
   Transaction,
 } from '@solana/web3.js'
 import bs58 from 'bs58'
+import { ENV } from './constants/env.constants'
 
 export const SOLANA_ADDRESSES = {
   SYSTEM_PROGRAM: '11111111111111111111111111111111',
   WSOL_MINT: 'So11111111111111111111111111111111111111112',
 }
+
+export const connection = new Connection(ENV.RPC_URL)
 
 export const sendNativeSol = async (
   connection: Connection,
@@ -76,9 +77,6 @@ export const sendNativeSol = async (
     throw new Error(error.message || 'Unknown error occurred')
   }
 }
-
-export const connection = async (cluster: Cluster = 'mainnet-beta') =>
-  new Connection(clusterApiUrl(cluster))
 
 export const isValidSolanaAddress = (address: string): boolean => {
   try {

@@ -2,6 +2,7 @@ import { startMessage } from '@/utils/constants/tg-message.constant'
 import { tgDeleteButton } from '@/utils/constants/tg.constants'
 import { appLogger } from '@/utils/logger.util'
 import { Context } from 'telegraf'
+import { messageCommand } from './message.tg_command'
 
 const LOG_NAME = '[StartCommand::Start]'
 
@@ -15,6 +16,15 @@ export const startCommand = async (ctx: Context) => {
     // if (refID) {
     //   await UserModel.addReferral(refID, chat_id)
     // }
+
+    const startParam = ctx.text?.split(' ')[1] // Gets the parameter after /start
+
+    if (startParam?.startsWith('trade_')) {
+      const mintAddress = startParam.replace('trade_', '')
+      // Auto-send the mint address as a message
+      ctx.state.mint = mintAddress
+      return await messageCommand(ctx)
+    }
 
     const photo_url = 'https://www.pixawallet.live/meta_dark.png'
 

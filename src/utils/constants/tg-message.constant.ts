@@ -2,7 +2,6 @@
 import { Risk, RugResponse, TokenHolder } from '@/types/rug.interface'
 import { GetTokenDetailsResponse200 } from '@api/vybe-api'
 import { TokenCall } from '@prisma/client'
-import { vybeFYITokenLink } from '../links.util'
 import {
   calculatePriceChangeWithSymbol,
   calculatePriceMultiplierWithEmoji,
@@ -102,11 +101,11 @@ export const sendTgTokenDetailsMessage = (
 ${firstCallerMessage}
 ${rugMessage}
 ${tokenDetails.mintAddress || 'Unknown'}
-└${vybeFYITokenLink(
-    'Analyze with Vybe',
-    tokenDetails?.mintAddress || 'Unknown'
-  )}
 `
+  // └${vybeFYITokenLink(
+  //   'Analyze with Vybe',
+  //   tokenDetails?.mintAddress || 'Unknown'
+  // )}
 }
 
 const rugResponse = ({
@@ -127,8 +126,6 @@ const rugResponse = ({
   const riskText = risks
     .map((risk) => `⚠️ ${risk.level}: ${risk.description}`)
     .join('\n')
-
-  console.log('top holders', top_holders)
 
   const insiders = top_holders.filter((holder) => holder.insider).length
 

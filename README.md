@@ -95,4 +95,4 @@ vybe_bot/
 
 ## License
 
-[MIT](https://github.com/mira4sol/alphavybebot/blob/main/LICENSE)
+This project is licensed under the [MIT License](LICENSE).

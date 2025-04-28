@@ -1,3 +1,12 @@
+import { Context } from 'telegraf'
+import { CallbackQuery, Update } from 'telegraf/typings/core/types/typegram'
+
+export type TelegrafCallbackContext = Context<
+  Update.CallbackQueryUpdate<CallbackQuery>
+> & {
+  match: RegExpExecArray
+}
+
 export interface TelegramUpdate {
   update_id: number
   message: TelegramMessage

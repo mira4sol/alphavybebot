@@ -1,6 +1,9 @@
+import { ENV } from '@/utils/constants/env.constants'
+import { encryptSolanaPrivateKey } from '@/utils/encryptions.helper'
 import { appLogger } from '@/utils/logger.util'
 import { prisma } from '@/utils/prisma.helper'
 import { TgUser } from '@prisma/client'
+import { Keypair } from '@solana/web3.js'
 
 export class UserModel {
   /**
@@ -16,6 +19,20 @@ export class UserModel {
     //   'username:',
     //   username
     // )
+
+    const wallet = Keypair.generate()
+    const privateKey = Buffer.from(wallet.secretKey).toString('hex')
+    const publicKey = wallet.publicKey.toString()
+
+    if (!ENV.ENCRYPTION_KEY) throw new Error('Encryption key missing')
+
+    // Encrypt the private key
+    const encryptedKeyData = await encryptSolanaPrivateKey(
+      privateKey,
+      ENV.ENCRYPTION_KEY,
+      telegramId
+    )
+
     try {
       const user = await prisma.tgUser.upsert({
         where: {
@@ -25,10 +42,19 @@ export class UserModel {
         create: {
           telegram_id: telegramId,
           username: username,
+          Wallet: {
+            create: {
+              public_key: publicKey,
+              private_key: encryptedKeyData.encryptedKey,
+              iv: encryptedKeyData.iv,
+              authTag: encryptedKeyData.authTag,
+            },
+          },
+          UserSettings: {
+            create: {},
+          },
         },
       })
-
-      // await createUserWallet(user.telegram_id)
 
       return user
     } catch (error) {

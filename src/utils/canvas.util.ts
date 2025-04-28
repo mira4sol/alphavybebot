@@ -44,11 +44,6 @@ export const setupFont = async () => {
   // Register the font
   try {
     GlobalFonts.registerFromPath(fontPath, 'OpenSans')
-    console.log('Font registered successfully')
-    console.log(
-      'Available fonts:',
-      GlobalFonts.families.map((f) => f.family).join(', ')
-    )
     return true
   } catch (error) {
     console.error('Error registering font:', error)

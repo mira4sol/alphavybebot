@@ -7,6 +7,13 @@ import {
   RouteMethods,
   RouteOptions,
 } from './decorators.interface'
+import {
+  JupiterQuoteParams,
+  JupiterQuoteResponse,
+  JupiterSwapParams,
+  JupiterSwapResponse,
+  PriorityLevel,
+} from './jupiter_interface'
 import { TelegramUpdate } from './telegram.interface'
 import {
   VybeConfigureMessage,
@@ -22,8 +29,13 @@ import {
 
 export {
   ApiResponseInterface,
+  JupiterQuoteParams,
+  JupiterQuoteResponse,
+  JupiterSwapParams,
+  JupiterSwapResponse,
   ParameterConfiguration,
   ParameterType,
+  PriorityLevel,
   ReflectMetadataKeys,
   Route,
   RouteMethods,

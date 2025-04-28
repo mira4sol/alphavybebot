@@ -1,5 +1,6 @@
+import { WalletModel } from '@/models/wallet.model'
 import { tgDeleteButton } from '@/utils/constants/tg.constants'
-import { vybeFYITokenLink, vybeFYIWalletLink } from '@/utils/links.util'
+import { vybeFYITokenLink } from '@/utils/links.util'
 import { appLogger } from '@/utils/logger.util'
 import { vybeApi } from '@/utils/platform'
 import { isValidSolanaAddress } from '@/utils/solana.lib'
@@ -12,11 +13,23 @@ export const walletCommand = async (ctx: Context) => {
   let deleteMessageId = 0
 
   try {
-    const wallet_address = ctx.text?.split(' ')[1]
+    let wallet_address = ctx.text?.split(' ')[1]
+
+    if (ctx?.chat?.type === 'private' && !wallet_address) {
+      const wallet = await WalletModel.findWallet(
+        ctx.from?.id?.toString() || ''
+      )
+      wallet_address = wallet.public_key
+    }
 
     if (!wallet_address || !isValidSolanaAddress(wallet_address?.trim())) {
-      let txt = `❌ Invalid Input!
- └ Use /wallet <wallet address>, e.g. /wallet 5QDwYS1CtHzN1oJ2eij8Crka4D2eJcUavMcyuvwNRM9`
+      let txt = `❌ Invalid Wallet Address!
+└ Usage Options:
+   • DM: Send /wallet to view your linked wallet
+   • Any Chat: /wallet <address> to view any wallet
+   
+📝 Example:
+/wallet 5QDwYS1CtHzN1oJ2eij8Crka4D2eJcUavMcyuvwNRM9`
 
       return await ctx.reply(txt, {
         reply_parameters: { message_id: ctx?.msgId || 0 },
@@ -38,6 +51,18 @@ export const walletCommand = async (ctx: Context) => {
     })
     const wallet_balance = walletReq.data
     console.log('wallet_balance', wallet_balance)
+
+    const isEmptyAndYours =
+      Number(wallet_balance.stakedSolBalance) === 0 ||
+      Number(wallet_balance.stakedSolBalance) < 0.01
+
+    let balanceEmptyText = isEmptyAndYours
+      ? `\n\n⚠️ Low SOL Balance Detected
+└ To start trading, please fund this wallet:
+   ${wallet_address}
+
+💡 SOL is required for transaction fees`
+      : ''
 
     const tokenDetailsTxt = wallet_balance.data
       .map((item) => {
@@ -61,20 +86,25 @@ export const walletCommand = async (ctx: Context) => {
       Number(wallet_balance?.totalTokenValueUsd1dChange).toFixed(2)
     )}%\\)
 ├ *Staked SOL*: $${escapeMarkdown(wallet_balance?.activeStakedSolBalanceUsd)}
-├ *Total token count*: ${escapeMarkdown(
+${isEmptyAndYours ? '└' : '├'} *Total token count*: ${escapeMarkdown(
       wallet_balance?.totalTokenCount?.toString() || '0'
-    )}
-└ ${vybeFYIWalletLink('*Analyze wallet with vybe*', wallet_address)}
-
-📊 Token Balances
+    )}${balanceEmptyText}
 ${tokenDetailsTxt}`
-
+    // └ ${vybeFYIWalletLink('*Analyze wallet with vybe*', wallet_address)}
     return await ctx.reply(walletMessageText, {
       parse_mode: 'MarkdownV2',
       reply_parameters: { message_id: ctx?.msgId || 0 },
       link_preview_options: { is_disabled: true },
       reply_markup: {
-        inline_keyboard: [tgDeleteButton],
+        inline_keyboard: [
+          [
+            {
+              text: 'Vybe FYI',
+              url: `https://vybe.fyi/wallets/${wallet_address}`,
+            },
+          ],
+          tgDeleteButton,
+        ],
       },
     })
   } catch (error: any) {

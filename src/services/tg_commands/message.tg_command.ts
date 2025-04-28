@@ -7,8 +7,10 @@ const LOG_NAME = '[MessageCommand::Message]'
 
 export const messageCommand = async (ctx: Context) => {
   try {
+    console.log('ctx.state', ctx.state, isMintAddress(ctx.state?.mint))
     // console.log('messageCommand', payload)
-    if (isMintAddress(ctx?.text || '')) {
+    if (isMintAddress(ctx.state?.mint || ctx?.text || '')) {
+      console.log('mint', ctx.state.mint)
       return await tokenResponse.tokenDetails(ctx)
     }
   } catch (error: any) {

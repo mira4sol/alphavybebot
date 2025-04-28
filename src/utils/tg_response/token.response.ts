@@ -4,6 +4,7 @@ import { Context } from 'telegraf'
 import { rugRequests } from '../api_requests/rug.request'
 import { sendTgTokenDetailsMessage } from '../constants/tg-message.constant'
 import { tgDeleteButton } from '../constants/tg.constants'
+import { getBotLink } from '../links.util'
 import { bot, vybeApi } from '../platform'
 
 export const tokenResponse = {
@@ -17,7 +18,8 @@ export const tokenResponse = {
     )?.message_id
 
     try {
-      const mint_address = ctx?.text || ''
+      const mint_address = ctx.state?.mint || ctx?.text || ''
+      console.log('mint_address', mint_address)
       const from = ctx?.message?.from
       const isGroup =
         ctx?.chat?.type === 'group' || ctx?.chat?.type === 'supergroup'
@@ -56,7 +58,24 @@ export const tokenResponse = {
           parse_mode: 'Markdown',
           reply_parameters: { message_id: ctx?.msgId || 0 },
           reply_markup: {
-            inline_keyboard: [tgDeleteButton],
+            inline_keyboard: [
+              [
+                {
+                  text: 'Trade',
+                  // callback_data: 'trade',
+                  url:
+                    getBotLink +
+                    '?start=trade_' +
+                    tokenDetails.data?.mintAddress,
+                },
+                // https://t.me/phanes_bot?start=price_3t6qtFX3YYeoUcYKVUCMfC7wVGu9neTfPXC41h63pump
+                {
+                  text: 'Vybe FYI',
+                  url: `https://vybe.fyi/tokens/${tokenDetails.data?.mintAddress}`,
+                },
+              ],
+              tgDeleteButton,
+            ],
           },
         }
       )

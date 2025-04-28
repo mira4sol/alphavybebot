@@ -32,6 +32,7 @@ model TgUser {
   Wallet           Wallet[]
   TokenCall        TokenCall[]
   LeaderboardEntry LeaderboardEntry[]
+  UserSettings     UserSettings?
 
   @@index([id, telegram_id, username, referral_code])
 }
@@ -41,6 +42,8 @@ model Wallet {
   telegram_id String
   public_key  String
   private_key String
+  iv          String // Initialization vector used for encryption
+  authTag     String // Authentication tag from GCM encryption
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
@@ -141,6 +144,30 @@ model Transaction {
   @@index([base_mint])
   @@index([quote_mint])
   @@index([price])
+}
+
+model UserSettings {
+  id          String @id @default(cuid())
+  telegram_id String @unique
+
+  // Buy configuration
+  buy_amount_sol     Float @default(0.1) // Default buy amount in SOL
+  max_buy_amount_sol Float @default(1.0) // Maximum buy amount allowed
+
+  // Sell configuration
+  sell_partial_percentage Float @default(25.0) // 25% partial sell
+  sell_full_percentage    Float @default(100.0) // 100% full sell
+
+  // Auto-trading settings
+  auto_buy_enabled    Boolean @default(false)
+  auto_buy_amount_sol Float   @default(0.1) // Default buy amount in SOL
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user TgUser @relation(fields: [telegram_id], references: [telegram_id])
+
+  @@index([telegram_id])
 }
 
 enum AddressType {
