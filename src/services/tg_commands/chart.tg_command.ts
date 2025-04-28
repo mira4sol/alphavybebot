@@ -1,6 +1,9 @@
 import { tgDeleteButton } from '@/utils/constants/tg.constants'
-import { vybeFYITokenLink } from '@/utils/links.util'
-import { calculatePriceChange } from '@/utils/number.helper'
+import { getBotLink } from '@/utils/links.util'
+import {
+  calculatePriceChange,
+  calculatePriceChangeWithSymbol,
+} from '@/utils/number.helper'
 import { vybeApi } from '@/utils/platform'
 import { isValidSolanaAddress } from '@/utils/solana.lib'
 import { formatDecimalPrice, formatLongNumber } from '@/utils/string'
@@ -101,9 +104,23 @@ export const chartCommand = async (ctx: Context) => {
     )
     // const chartBuffer = await generateCandlestickChart(token_ohlc, '')
 
-    const caption = `📊 Chart Information
-${vybeFYITokenLink('Advance Analyses with vybe', wallet_address)}`
+    const priceChange = calculatePriceChangeWithSymbol(
+      token_details?.price || 0,
+      token_details.price1d || 0
+    )
 
+    const caption = `📊 Chart Information
+
+🟣*${token_details.name || 'Unknown'} (${token_details.symbol || 'Unknown'})*
+├ Price:   *$${formatDecimalPrice(token_details.price, 5)}* (${priceChange} 24h)
+├ MC:   *$${formatLongNumber(token_details?.marketCap || 0) || 'Unknown'}*
+├ Supply:   *${
+      formatLongNumber(token_details?.currentSupply || 0) || 'Unknown'
+    }*
+└ Vol (24h):   *$${
+      formatLongNumber(token_details.usdValueVolume24h || 0) || 'Unknown'
+    }*`
+    // ${vybeFYITokenLink('Advance Analyses with vybe', wallet_address)}
     await ctx.replyWithPhoto(
       { source: chartBuffer },
       {
@@ -111,7 +128,21 @@ ${vybeFYITokenLink('Advance Analyses with vybe', wallet_address)}`
         parse_mode: 'Markdown',
         reply_parameters: { message_id: ctx?.msgId || 0 },
         reply_markup: {
-          inline_keyboard: [tgDeleteButton],
+          inline_keyboard: [
+            [
+              {
+                text: 'Trade',
+                // callback_data: 'trade',
+                url: getBotLink + '?start=trade_' + token_details.mintAddress,
+              },
+              // https://t.me/phanes_bot?start=price_3t6qtFX3YYeoUcYKVUCMfC7wVGu9neTfPXC41h63pump
+              {
+                text: 'Vybe FYI',
+                url: `https://vybe.fyi/tokens/${token_details?.mintAddress}`,
+              },
+            ],
+            tgDeleteButton,
+          ],
         },
       }
     )
