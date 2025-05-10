@@ -33,10 +33,16 @@ export const leaderboardCommand = async (ctx: Context) => {
     const leaderboardTexts = getLeaderBoard.leaderboard
       .map((item, index) => {
         const query = `call_${ctx?.message?.chat?.id}_${ctx?.message?.from?.id}`
+        const escapedUsername = item.user?.username
+          ? escapeTelegramChar(item.user.username)
+          : 'Anonymous'
         return `>🟣${index + 1} ${
-          escapeTelegramChar(item.user?.username || '')
-            ? `${tgRedirectToBotLink(item.user?.username || '', query)}`
-            : 'Anonymous'
+          item.user?.username
+            ? `${tgRedirectToBotLink(
+                escapeTelegramChar(item.user.username),
+                query
+              )}`
+            : escapedUsername
         } \\- ${item.points} points`
       })
       .join('\n')
