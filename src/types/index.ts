@@ -15,6 +15,7 @@ import {
   PriorityLevel,
 } from './jupiter_interface'
 import { TelegramUpdate } from './telegram.interface'
+import { CoinGeckoMarketData } from './coingecko.interface'
 import {
   VybeConfigureMessage,
   VybeOraclePriceFilter,
@@ -50,4 +51,5 @@ export {
   VybeTransferFilter,
   VybeTransferSocketMessage,
   VybeWebSocketConfig,
+  CoinGeckoMarketData,
 }

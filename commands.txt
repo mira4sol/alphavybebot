@@ -10,10 +10,8 @@ trending - Real-time trending tokens
 pro - Go Premium and unlock perks
 help - Get detailed guidance
 settings - Bot settings
-
-
-tt - Top Solana tokens
-ttg - View top global tokens
+tt - Top 10 Solana tokens
+ttg - View top 10 global tokens
 
 
 

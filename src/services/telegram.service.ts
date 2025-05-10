@@ -11,6 +11,7 @@ import { messageCommand } from './tg_commands/message.tg_command'
 import { premiumCommand } from './tg_commands/premium.tg_command'
 import { settingsCommand } from './tg_commands/settings.tg_command'
 import { startCommand } from './tg_commands/start.tg_command'
+import { topTokensCommand } from './tg_commands/top_tokens.tg_command'
 import { trendingCommand } from './tg_commands/trending.tg_command'
 import { walletCommand } from './tg_commands/wallet.tg_command'
 import { walletAlertCommand } from './tg_commands/walllet_alert.tg_command'
@@ -38,6 +39,8 @@ bot.command('leaderboard', leaderboardCommand)
 bot.command('wallet', walletCommand)
 bot.command('wa', (ctx) => walletAlertCommand(ctx, 'Wallet'))
 bot.command('ta', (ctx) => walletAlertCommand(ctx, 'Mint'))
+bot.command('tt', (ctx) => topTokensCommand(ctx, true))
+bot.command('ttg', (ctx) => topTokensCommand(ctx, false))
 bot.command('ca', cancelAlertCommand)
 bot.command('pro', premiumCommand)
 bot.command('balance', balanceCommand)

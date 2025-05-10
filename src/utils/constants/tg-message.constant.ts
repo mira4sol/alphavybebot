@@ -35,7 +35,9 @@ I'm here to transform your trading experience into an exciting competition. Trac
 
 Ready to prove you're the ultimate trader? Let's Vybe! 🌟
 
-Join the competition, make your calls, and watch your rank rise! Remember - great calls earn points, but poor ones might cost you. May the best trader win! 📊`
+Join the competition, make your calls, and watch your rank rise! Remember - great calls earn points, but poor ones might cost you. May the best trader win! 📊
+
+[read the docs 📚](https://ahmadmuhammadmak5.gitbook.io/alpha-vyve)`
 
 // Rest of the file remains unchanged...
 export const sendTgTokenDetailsMessage = (
@@ -100,8 +102,9 @@ export const sendTgTokenDetailsMessage = (
   }*
 ${firstCallerMessage}
 ${rugMessage}
-${tokenDetails.mintAddress || 'Unknown'}
-`
+\`${tokenDetails.mintAddress || 'Unknown'}\`
+
+[read the docs 📚](https://ahmadmuhammadmak5.gitbook.io/alpha-vyve/token-analyses)`
   // └${vybeFYITokenLink(
   //   'Analyze with Vybe',
   //   tokenDetails?.mintAddress || 'Unknown'
