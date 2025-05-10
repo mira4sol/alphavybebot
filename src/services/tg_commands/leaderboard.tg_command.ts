@@ -2,6 +2,7 @@ import { LeaderboardModel } from '@/models/leaderboard.model'
 import { tgDeleteButton } from '@/utils/constants/tg.constants'
 import { tgRedirectToBotLink } from '@/utils/links.util'
 import { appLogger } from '@/utils/logger.util'
+import { escapeTelegramChar } from '@/utils/telegram.helpers'
 import { Context } from 'telegraf'
 
 const LOG_NAME = '[LeaderboardCommand::Message]'
@@ -27,14 +28,14 @@ export const leaderboardCommand = async (ctx: Context) => {
     const getLeaderBoard = await LeaderboardModel.getGroupLeaderboard(
       ctx?.chat?.id?.toString() || ''
     )
-    console.log('leaderboardCommand', getLeaderBoard)
+    // console.log('leaderboardCommand', getLeaderBoard)
 
     const leaderboardTexts = getLeaderBoard.leaderboard
       .map((item, index) => {
         const query = `call_${ctx?.message?.chat?.id}_${ctx?.message?.from?.id}`
         return `>🟣${index + 1} ${
-          item.user?.username
-            ? `${tgRedirectToBotLink(item.user?.username, query)}`
+          escapeTelegramChar(item.user?.username || '')
+            ? `${tgRedirectToBotLink(item.user?.username || '', query)}`
             : 'Anonymous'
         } \\- ${item.points} points`
       })

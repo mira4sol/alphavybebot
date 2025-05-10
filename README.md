@@ -42,6 +42,7 @@ BOT_TOKEN=your_telegram_bot_token
 TELEGRAM_TOKEN=your_telegram_token
 TELEGRAM_HOOK_URL=your_telegram_server_webhook
 VIBE_API_KEY=vybenetwork_api_key
+COINGECKO_API_KEY=vybenetwork_api_key
 PORT=app_port
 DATABASE_URL=your_postgres_database_connection_url
 ```
