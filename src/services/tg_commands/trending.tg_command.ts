@@ -17,6 +17,15 @@ interface TokenData {
   usdValueVolume24h: number | null
   currentSupply: number
   verified: boolean
+  mintAddress: string
+  logoUrl: string
+  decimal: number
+  price1d: number
+  price7d: number
+  category: string | null
+  subcategory: string | null
+  updateTime: number
+  tokenAmountVolume24h: number
 }
 
 export const trendingCommand = async (ctx: Context) => {
@@ -41,7 +50,8 @@ export const trendingCommand = async (ctx: Context) => {
 >├ Market Cap: $${formatLongNumber(token.marketCap, true)}
 >├ 24h Volume: $${formatLongNumber(token.usdValueVolume24h || 0, true)}
 >├ Supply: ${formatLongNumber(token.currentSupply, true)}
->└ Verified: ${token.verified ? '✅' : '❌'}`
+>└ Verified: ${token.verified ? '✅' : '❌'}
+>└ Address: \`${token.mintAddress}\``
       })
       .join('\n>\n')
 
