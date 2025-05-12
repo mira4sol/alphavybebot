@@ -57,11 +57,20 @@ const subscriptions = async (message: VybeTransferSocketMessage) => {
             : message.senderAddress
           const actionText = isSender ? 'Sent to' : 'Received from'
 
+          const walletBalance = await vybeApi.get_wallet_tokens({
+            ownerAddress: subscription.address,
+            minAssetValue: '0',
+            maxAssetValue: '10e20',
+          })
+
           const messageText = `Transfer Alert 🚨
 ├ 🟣*${token_details.name || 'Unknown'} (${token_details.symbol || 'Unknown'})*
 ├ amount: ${amount}
 ├ price (USD): $${price}
-├ ${actionText}: ${otherAddress}`
+├ ${actionText}: ${otherAddress}
+└ wallet balance: $${formatLongNumber(
+            parseFloat(walletBalance.data.totalTokenValueUsd)
+          )}`
 
           await bot.telegram.sendPhoto(chatId, token_details?.logoUrl || '', {
             caption: messageText,
