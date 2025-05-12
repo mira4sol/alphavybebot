@@ -1,4 +1,5 @@
 import { apiResponse, httpRequest } from '../api.helpers'
+import { ENV } from '../constants/env.constants'
 
 export const coinGeckoRequests = {
   getTopCoins: async (solOnly?: boolean) => {
@@ -13,7 +14,7 @@ export const coinGeckoRequests = {
         },
         headers: {
           accept: 'application/json',
-          'x-cg-demo-api-key': 'CG-eGZPNiJmUxVY3B2B8twLCunE',
+          'x-cg-demo-api-key': ENV.COINGECKO_API_KEY,
         },
       })
 

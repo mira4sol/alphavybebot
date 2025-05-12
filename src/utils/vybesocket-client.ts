@@ -22,6 +22,7 @@ export class VybeWebSocket {
   private reconnectAttempts = 0
   private readonly config: Required<VybeWebSocketConfig>
   private reconnectTimeout?: NodeJS.Timeout
+  private isDisconnecting = false
 
   constructor(config: VybeWebSocketConfig) {
     // Default configuration
@@ -54,6 +55,8 @@ export class VybeWebSocket {
   }
 
   public connect(): void {
+    if (this.isDisconnecting) return
+
     try {
       // Subscribe to Business or Premium plan here for Websocket API access - https://alpha.vybenetwork.com/api-plans - generate API key and get websocket URI here https://alpha.vybenetwork.com/dashboard/api-management
       this.ws = new WebSocketInstance(this.config.websocketUri, {
@@ -67,12 +70,31 @@ export class VybeWebSocket {
   }
 
   public disconnect(): void {
+    this.isDisconnecting = true
+    this.config.reconnect = false // Disable reconnection
+
     if (this.reconnectTimeout) {
       clearTimeout(this.reconnectTimeout)
+      this.reconnectTimeout = undefined
     }
-    this.ws?.close()
-    this.ws = null
+
+    if (this.ws) {
+      // Remove all event listeners
+      this.ws.removeAllListeners()
+
+      // Close the connection
+      this.ws.close()
+
+      // Force terminate if still connected
+      if (this.ws.readyState === WebSocketInstance.OPEN) {
+        this.ws.terminate()
+      }
+
+      this.ws = null
+    }
+
     this.reconnectAttempts = 0
+    this.isDisconnecting = false
   }
 
   private setupEventListeners(): void {
@@ -91,6 +113,8 @@ export class VybeWebSocket {
   }
 
   private handleMessage(message: WebSocketInstance.Data): void {
+    if (this.isDisconnecting) return
+
     try {
       const parsedMessage = JSON.parse(message.toString())
       this.config.onMessage(parsedMessage)
@@ -100,23 +124,22 @@ export class VybeWebSocket {
   }
 
   private handleClose(): void {
+    if (this.isDisconnecting) return
+
     this.config.onDisconnect()
     this.handleReconnect()
   }
 
   private handleError(error: Error): void {
+    if (this.isDisconnecting) return
+
     appLogger.error('VibeSocketError]', `WebSocket error: ${error}`)
     this.config.onError(error)
     this.handleReconnect()
   }
 
   private handleReconnect(): void {
-    if (!this.config.reconnect) return
-
-    // if (this.reconnectAttempts >= this.config.maxReconnectAttempts) {
-    //   this.config.onError(new Error('Max reconnection attempts reached'))
-    //   return
-    // }
+    if (!this.config.reconnect || this.isDisconnecting) return
 
     const delay =
       this.config.baseReconnectDelay * Math.pow(2, this.reconnectAttempts)
@@ -129,7 +152,7 @@ export class VybeWebSocket {
   }
 
   private sendConfigureMessage(): void {
-    if (!this.ws) return
+    if (!this.ws || this.isDisconnecting) return
     this.ws.send(JSON.stringify(this.config.configureMessage))
   }
 

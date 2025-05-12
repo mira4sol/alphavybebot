@@ -12,6 +12,11 @@ export const SOLANA_ADDRESSES = {
   WSOL_MINT: 'So11111111111111111111111111111111111111112',
 }
 
+export const SOLANA_ADDRESSES_ARR = [
+  SOLANA_ADDRESSES.SYSTEM_PROGRAM,
+  SOLANA_ADDRESSES.WSOL_MINT,
+]
+
 export const connection = new Connection(ENV.RPC_URL)
 
 export const sendNativeSol = async (
@@ -76,6 +81,13 @@ export const sendNativeSol = async (
   } catch (error: any) {
     throw new Error(error.message || 'Unknown error occurred')
   }
+}
+
+export const isMintAddress = (address: string) => {
+  // Solana addresses are 32-44 characters long and contain only base58 characters
+  const solanaAddressRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/
+
+  return solanaAddressRegex.test(address)
 }
 
 export const isValidSolanaAddress = (address: string): boolean => {

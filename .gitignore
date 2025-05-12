@@ -12,6 +12,7 @@ lerna-debug.log*
 **/node_modules
 /jspm_packages
 /dist
+/data/top_tokens.json
 # package-lock.json (NOTE: Lekan - removed so that we can use the github action/runner since it is a required file)
 
 # TypeScript v1 declaration files

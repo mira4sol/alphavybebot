@@ -5,7 +5,10 @@ import { getBotLink } from '@/utils/links.util'
 import { appLogger } from '@/utils/logger.util'
 import { formatLongNumber } from '@/utils/string'
 import { escapeTelegramChar } from '@/utils/telegram.helpers'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import { Context } from 'telegraf'
+dayjs.extend(relativeTime)
 
 const LOG_NAME = '[TrendingCommand::Message]'
 
@@ -49,11 +52,16 @@ export const topTokensCommand = async (ctx: Context, solOnly?: boolean) => {
             : token.price_change_percentage_24h.toFixed(2)
         )}%\\)
 >├ Market Cap: $${formatLongNumber(token.market_cap, true)}
->├ ATH: $${formatLongNumber(token.ath, true)}`
+>├ ATH: $${formatLongNumber(token.ath, true)}
+>├ ATH Date: ${dayjs(token.ath_date).fromNow()}`
+
+        // >├ ATH Date: ${dayjs(token.ath_date).format('DD-MM-YYYY')}`
       })
       .join('\n>\n')
 
-    const headerText = solOnly ? '🔝 Top SOL Tokens' : '🔝 Top Tokens'
+    const headerText = solOnly
+      ? '🔝 Top Solana Tokens'
+      : '🔝 Top Tokens Globally'
     const messageText = `${headerText}\n\n${tokensText}`
 
     await ctx.reply(messageText, {

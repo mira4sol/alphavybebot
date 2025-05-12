@@ -5,47 +5,79 @@ import { formatLongNumber } from '@/utils/string'
 
 export const handleTransferMessages = (message: VybeTransferSocketMessage) => {
   // Handle transfer messages
-  console.log('Transfer message:', message)
+  subscriptions(message).catch((error) => {
+    console.error('Error in transfer message handler:', error)
+  })
 }
 
 const subscriptions = async (message: VybeTransferSocketMessage) => {
-  const subscriptions = await prisma.subscription.findMany({
-    where: {
-      address_type: 'Wallet',
-      address: message?.senderAddress || message?.receiverAddress,
-    },
-  })
+  try {
+    // Batch fetch all subscriptions at once
+    const subscriptions = await prisma.subscription.findMany({
+      where: {
+        address_type: 'Wallet',
+        address: {
+          in: [message?.senderAddress, message?.receiverAddress].filter(
+            Boolean
+          ),
+        },
+      },
+    })
+    console.log('subscriptions', subscriptions)
 
-  for (const subscription of subscriptions) {
-    const chatId = subscription.chat_id
+    if (subscriptions.length === 0) return
 
+    // Fetch token details once for all subscriptions
     const token_details_req = await vybeApi.get_token_details({
       mintAddress: message?.mintAddress,
     })
     const token_details = token_details_req.data
     const amount = formatLongNumber(message.amount)
-    const action =
-      message.receiverAddress === subscription?.address ? 'Receiver' : 'Sender'
-    const action_receiver =
-      action === 'Receiver' ? message?.receiverAddress : message?.senderAddress
     const price = formatLongNumber(token_details?.price * message.amount)
 
-    // └ trade type: ${isBuy ? 'BOUGHT' : 'SOLD'}`
-    const messageText = `Transfer Alert 🚨
+    // Process all subscriptions
+    await Promise.all(
+      subscriptions.map(async (subscription) => {
+        try {
+          const chatId = subscription.chat_id
+          const action =
+            message.receiverAddress === subscription?.address
+              ? 'Receiver'
+              : 'Sender'
+          const action_receiver =
+            action === 'Receiver'
+              ? message?.receiverAddress
+              : message?.senderAddress
+
+          const messageText = `Transfer Alert 🚨
 ├ 🟣*${token_details.name || 'Unknown'} (${token_details.symbol || 'Unknown'})*
 ├ amount: ${amount}
 price (USD): $${price}
 ├ action: ${action}
 ├ ${action} address: ${action_receiver}`
 
-    bot.telegram.sendPhoto(chatId, token_details?.logoUrl || '', {
-      caption: messageText,
-      parse_mode: 'Markdown',
-      reply_markup: {
-        inline_keyboard: [
-          [{ text: 'Unsubscribe', callback_data: 'unsubscibe' }],
-        ],
-      },
-    })
+          await bot.telegram.sendPhoto(chatId, token_details?.logoUrl || '', {
+            caption: messageText,
+            parse_mode: 'Markdown',
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: 'Unsubscribe', callback_data: 'unsubscibe' }],
+              ],
+            },
+          })
+
+          // Add small delay between messages to avoid rate limiting
+          await new Promise((resolve) => setTimeout(resolve, 100))
+        } catch (error) {
+          console.error(
+            `Error processing subscription for chat ${subscription.chat_id}:`,
+            error
+          )
+        }
+      })
+    )
+  } catch (error) {
+    console.error('Error in subscriptions handler:', error)
+    throw error
   }
 }

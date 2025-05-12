@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rimraf dist/* && tsc && tsc-alias",
     "start": "node dist/src/index.js",
-    "dev": "nodemon --exec 'ts-node -r tsconfig-paths/register' src/index.ts",
+    "dev": "nodemon --ignore 'data/*.json' --exec 'ts-node -r tsconfig-paths/register' src/index.ts",
     "dev1": "ts-node -r tsconfig-paths/register src/index.ts"
   },
   "keywords": [],
@@ -26,6 +26,7 @@
     "bs58": "^6.0.0",
     "compression": "^1.8.0",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "helmet": "^8.1.0",

@@ -1,6 +1,7 @@
 import express from 'express'
 import http from 'http'
 import 'reflect-metadata' // Used so that we can run this script directly from ts-node
+import { startCronJobs, stopCronJobs } from './cron/scheduler'
 import { injectMiddleWares } from './middlewares'
 import { registerRoutes } from './routes'
 import { vybeWssCustomMessageHandler } from './services/vybe-socket.service'
@@ -8,9 +9,13 @@ import { setupFont } from './utils/canvas.util'
 import { ENV } from './utils/constants/env.constants'
 import { appLogger } from './utils/logger.util'
 import { prisma } from './utils/prisma.helper'
-import { VybeWebSocket } from './utils/vybesocket-client'
+import {
+  availableTradesPrograms,
+  VybeWebSocket,
+} from './utils/vybesocket-client'
 
 let server: http.Server
+let wsClient: VybeWebSocket | null = null
 
 /**
  * The `bootstrap` function initializes a server using Express, initializes a database using Sequelize,
@@ -39,28 +44,24 @@ const bootstrap = async () => {
     process.exit(1)
   })
 
+  // Start cron jobs
+  startCronJobs()
+
   // run initial scripts
   // runInitialScripts()
 
-  const wsClient = new VybeWebSocket({
+  wsClient = new VybeWebSocket({
     websocketUri: 'wss://api.vybenetwork.xyz/live',
     apiKey: ENV.VIBE_API_KEY || '',
     configureMessage: {
       type: 'configure',
       filters: {
-        // trades: [
-        // { tokenMintAddress: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN' },
-        // ],
-        // trades: [
-        // { tokenMintAddress: '51X4B3CH1zsQiD8tq74PkdDs5b29rrNFyNC37SM1pump' },
-        // ],
-        // trades: [
-        //   { programId: availableTradesPrograms.RAYDIUM_V4 },
-        //   { programId: availableTradesPrograms.RAYDIUM_CLMM },
-        //   { programId: availableTradesPrograms.PUMP_FUN },
-        // ],
-        // transfers: [],
-        // oraclePrices: [],
+        trades: [
+          { programId: availableTradesPrograms.RAYDIUM_V4 },
+          { programId: availableTradesPrograms.RAYDIUM_CLMM },
+          { programId: availableTradesPrograms.PUMP_FUN },
+        ],
+        transfers: [],
       },
     },
     onMessage: vybeWssCustomMessageHandler,
@@ -68,29 +69,56 @@ const bootstrap = async () => {
     onError: (error) => {
       console.error('Custom error handler:', error)
       appLogger.log('error', `Error connecting to Vybe: ${error}`)
-      // Additional error handling logic
     },
   })
 
   wsClient.connect()
+}
 
-  // Later, when needed:
-  // wsClient.disconnect()
+const cleanup = async () => {
+  appLogger.log('info', 'Cleaning up resources...')
+
+  // Stop cron jobs
+  stopCronJobs()
+
+  // Disconnect WebSocket
+  if (wsClient) {
+    try {
+      wsClient.disconnect()
+      // Force close the WebSocket connection
+      if (wsClient['ws']) {
+        wsClient['ws'].terminate()
+      }
+      wsClient = null
+      appLogger.log('info', 'WebSocket connection terminated')
+    } catch (error) {
+      appLogger.error('Error disconnecting WebSocket:', error)
+    }
+  }
+
+  // Close database connection
+  try {
+    await prisma.$disconnect()
+    appLogger.log('info', 'Database connection closed')
+  } catch (error) {
+    appLogger.error('Error disconnecting database:', error)
+  }
+
+  // Close HTTP server
+  if (server) {
+    server.close(() => {
+      appLogger.log('info', 'HTTP server closed')
+      // Force exit after cleanup
+      process.exit(0)
+    })
+  } else {
+    // If server is not available, exit immediately
+    process.exit(0)
+  }
 }
 
 bootstrap()
-// Call this before starting your bot
-// registerFonts()
 
-/* This code block is checking if the Node environment is set to 'production'. If it is, then it sets
-up a listener for the 'SIGTERM' signal. When a 'SIGTERM' signal is received, it logs a message
-indicating that the signal was received and proceeds to close the HTTP server gracefully. This
-ensures that the server shuts down properly when the 'SIGTERM' signal is sent, which is a common way
-to gracefully stop a Node.js process in a production environment. */
-if (process.env.NODE_ENV === 'production')
-  process.on('SIGTERM', () => {
-    appLogger.log('info', 'SIGTERM signal received: closing HTTP server')
-    server.close(() => {
-      appLogger.log('info', 'HTTP server closed')
-    })
-  })
+// Handle graceful shutdown
+process.on('SIGTERM', cleanup)
+process.on('SIGINT', cleanup)

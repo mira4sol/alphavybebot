@@ -1,5 +1,5 @@
 import { tgDeleteButton } from '@/utils/constants/tg.constants'
-import { isMintAddress } from '@/utils/solana.helper'
+import { isMintAddress } from '@/utils/solana.lib'
 import { tokenResponse } from '@/utils/tg_response/token.response'
 import { Context } from 'telegraf'
 

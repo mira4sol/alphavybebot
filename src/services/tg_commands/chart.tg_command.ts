@@ -451,7 +451,7 @@ async function generateCandlestickChart1(
   ctx.fillStyle = '#111111'
   ctx.fillRect(0, 0, width, height)
 
-  console.log('font families', GlobalFonts.families)
+  // console.log('font families', GlobalFonts.families)
 
   // Draw title with timeframe
   ctx.fillStyle = '#FFFFFF'
