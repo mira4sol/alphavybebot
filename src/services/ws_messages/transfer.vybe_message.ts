@@ -23,7 +23,7 @@ const subscriptions = async (message: VybeTransferSocketMessage) => {
         },
       },
     })
-    console.log('subscriptions', subscriptions)
+    // console.log('subscriptions', subscriptions)
 
     if (subscriptions.length === 0) return
 

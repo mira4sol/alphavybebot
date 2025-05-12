@@ -31,7 +31,7 @@ export const fetchTopTokens = async () => {
       const transactions = await prisma.transaction.findMany({
         where: {
           created_at: {
-            // gte: fiveMinutesAgo,
+            gte: fiveMinutesAgo,
           },
           base_mint: {
             in: SOLANA_ADDRESSES_ARR,
