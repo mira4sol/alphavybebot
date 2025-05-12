@@ -2,7 +2,7 @@ import { VybeTransferSocketMessage } from '@/types'
 import { bot, vybeApi } from '@/utils/platform'
 import { prisma } from '@/utils/prisma.helper'
 import { SOLANA_ADDRESSES_ARR } from '@/utils/solana.lib'
-import { formatLongNumber } from '@/utils/string'
+import { formatDecimalPrice, formatLongNumber } from '@/utils/string'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js'
 
 export const handleTransferMessages = (message: VybeTransferSocketMessage) => {
@@ -38,32 +38,30 @@ const subscriptions = async (message: VybeTransferSocketMessage) => {
     const amount = isSolana
       ? formatLongNumber(message.amount / LAMPORTS_PER_SOL)
       : formatLongNumber(message.amount)
+
     const price = isSolana
-      ? formatLongNumber(
-          token_details?.price * (message.amount / LAMPORTS_PER_SOL)
+      ? formatDecimalPrice(
+          token_details?.price * (message.amount / LAMPORTS_PER_SOL),
+          5
         )
-      : formatLongNumber(token_details?.price * message.amount)
+      : formatDecimalPrice(token_details?.price * message.amount, 5)
 
     // Process all subscriptions
     await Promise.all(
       subscriptions.map(async (subscription) => {
         try {
           const chatId = subscription.chat_id
-          const action =
-            message.receiverAddress === subscription?.address
-              ? 'Sender'
-              : 'Receiver'
-          const action_receiver =
-            action === 'Receiver'
-              ? message?.receiverAddress
-              : message?.senderAddress
+          const isSender = message.senderAddress === subscription.address
+          const otherAddress = isSender
+            ? message.receiverAddress
+            : message.senderAddress
+          const actionText = isSender ? 'Sent to' : 'Received from'
 
           const messageText = `Transfer Alert 🚨
 ├ 🟣*${token_details.name || 'Unknown'} (${token_details.symbol || 'Unknown'})*
 ├ amount: ${amount}
-price (USD): $${price}
-├ action: ${action}
-├ ${action} address: ${action_receiver}`
+├ price (USD): $${price}
+├ ${actionText}: ${otherAddress}`
 
           await bot.telegram.sendPhoto(chatId, token_details?.logoUrl || '', {
             caption: messageText,
