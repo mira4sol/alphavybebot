@@ -39,7 +39,9 @@ const subscriptions = async (message: VybeTransferSocketMessage) => {
       ? formatLongNumber(message.amount / LAMPORTS_PER_SOL)
       : formatLongNumber(message.amount)
     const price = isSolana
-      ? formatLongNumber(token_details?.price * message.amount)
+      ? formatLongNumber(
+          token_details?.price * (message.amount / LAMPORTS_PER_SOL)
+        )
       : formatLongNumber(token_details?.price * message.amount)
 
     // Process all subscriptions
