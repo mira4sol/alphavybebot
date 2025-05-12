@@ -67,7 +67,7 @@ const subscriptions = async (message: VybeTransferSocketMessage) => {
 ├ 🟣*${token_details.name || 'Unknown'} (${token_details.symbol || 'Unknown'})*
 ├ amount: ${amount}
 ├ price (USD): $${price}
-├ ${actionText}: ${otherAddress}
+├ ${actionText}: \`${otherAddress}\`
 └ wallet balance: $${formatLongNumber(
             parseFloat(walletBalance.data.totalTokenValueUsd)
           )}`
