@@ -13,6 +13,8 @@ tt - Top 10 Solana tokens
 ttg - View top 10 global tokens
 
 
+ta - (Token Alert): Get token alerts by subscribing to a mint address
+
 
 Name: Alpha Vybe
 About: Introducing a fun and interactive way to engage with trading in your community.

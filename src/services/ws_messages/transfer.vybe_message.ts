@@ -1,7 +1,9 @@
 import { VybeTransferSocketMessage } from '@/types'
 import { bot, vybeApi } from '@/utils/platform'
 import { prisma } from '@/utils/prisma.helper'
+import { SOLANA_ADDRESSES_ARR } from '@/utils/solana.lib'
 import { formatLongNumber } from '@/utils/string'
+import { LAMPORTS_PER_SOL } from '@solana/web3.js'
 
 export const handleTransferMessages = (message: VybeTransferSocketMessage) => {
   // Handle transfer messages
@@ -32,8 +34,13 @@ const subscriptions = async (message: VybeTransferSocketMessage) => {
       mintAddress: message?.mintAddress,
     })
     const token_details = token_details_req.data
-    const amount = formatLongNumber(message.amount)
-    const price = formatLongNumber(token_details?.price * message.amount)
+    const isSolana = SOLANA_ADDRESSES_ARR.includes(message.mintAddress)
+    const amount = isSolana
+      ? formatLongNumber(message.amount / LAMPORTS_PER_SOL)
+      : formatLongNumber(message.amount)
+    const price = isSolana
+      ? formatLongNumber(token_details?.price * message.amount)
+      : formatLongNumber(token_details?.price * message.amount)
 
     // Process all subscriptions
     await Promise.all(
@@ -42,8 +49,8 @@ const subscriptions = async (message: VybeTransferSocketMessage) => {
           const chatId = subscription.chat_id
           const action =
             message.receiverAddress === subscription?.address
-              ? 'Receiver'
-              : 'Sender'
+              ? 'Sender'
+              : 'Receiver'
           const action_receiver =
             action === 'Receiver'
               ? message?.receiverAddress

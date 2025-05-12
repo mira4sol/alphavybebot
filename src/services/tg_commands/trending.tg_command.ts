@@ -50,7 +50,7 @@ export const trendingCommand = async (ctx: Context) => {
 >├ Market Cap: $${formatLongNumber(token.marketCap, true)}
 >├ 24h Volume: $${formatLongNumber(token.usdValueVolume24h || 0, true)}
 >├ Supply: ${formatLongNumber(token.currentSupply, true)}
->└ Verified: ${token.verified ? '✅' : '❌'}
+>├ Verified: ${token.verified ? '✅' : '❌'}
 >└ Address: \`${token.mintAddress}\``
       })
       .join('\n>\n')
