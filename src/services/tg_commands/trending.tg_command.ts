@@ -14,7 +14,7 @@ interface TokenData {
   symbol: string
   price: number
   marketCap: number
-  usdValueVolume24h: number
+  usdValueVolume24h: number | null
   currentSupply: number
   verified: boolean
 }
@@ -39,7 +39,7 @@ export const trendingCommand = async (ctx: Context) => {
         )}\\)
 >├ Price: $${formatLongNumber(token.price, true)}
 >├ Market Cap: $${formatLongNumber(token.marketCap, true)}
->├ 24h Volume: $${formatLongNumber(token.usdValueVolume24h, true)}
+>├ 24h Volume: $${formatLongNumber(token.usdValueVolume24h || 0, true)}
 >├ Supply: ${formatLongNumber(token.currentSupply, true)}
 >└ Verified: ${token.verified ? '✅' : '❌'}`
       })
