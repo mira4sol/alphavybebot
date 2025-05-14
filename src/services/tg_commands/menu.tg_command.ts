@@ -26,13 +26,23 @@ export const menuCommand = async (ctx: Context) => {
     )
     if (!wallet) throw new Error('Wallet not found')
 
-    let message = `🎯 *Vybe Bot Menu*\n\n`
+    let message = `🚀 *Welcome to Vybe Bot*\n\n`
     message += `*Your Wallet:*\n\`${wallet.public_key}\`\n\n`
-    message += `Select an option below to get started:\n\n`
-    message += `*Wallet Management:*\nView and manage your wallet details\n\n`
-    message += `*Token Actions:*\nBuy tokens and view market data\n\n`
-    message += `*Tracking:*\nMonitor wallets and tokens\n\n`
-    message += `*Market Data:*\nView trending and top tokens`
+    message += `*Quick Start Guide:*\n`
+    message += `• Send SOL to your wallet address above to start trading\n`
+    message += `• Paste any Solana token address to analyze or trade it\n`
+    message += `• Use the buttons below to explore more features\n\n`
+    message += `*Supported Sources:*\n`
+    message += `• Direct token addresses\n`
+    message += `• pump.fun links\n`
+    message += `• Birdeye links\n`
+    message += `• DEX Screener links\n`
+    message += `• Meteora links\n\n`
+    message += `*Security Note:*\n`
+    message += `⚠️ Never share your seed phrase or private keys\n`
+    message += `⚠️ Be cautious of fake airdrops or login pages\n\n`
+    message += `*Community:*\n`
+    message += `Join our community for updates and support!`
 
     await ctx.reply(message, {
       reply_parameters: { message_id: ctx?.msgId || 0 },

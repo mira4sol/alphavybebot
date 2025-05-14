@@ -210,6 +210,44 @@ export const messageCommand = async (ctx: TelegrafContext) => {
     }
 
     // Handle token address input
+    const input = ctx.state?.mint || ctx?.text || ''
+
+    // Check for pump.fun or dexscreener URLs
+    if (input.startsWith('https://')) {
+      try {
+        const url = new URL(input)
+        let mintAddress: string | null = null
+
+        // Handle pump.fun URLs
+        if (url.hostname === 'pump.fun') {
+          const pathParts = url.pathname.split('/')
+          const coinPart = pathParts[pathParts.length - 1]
+          if (coinPart && isMintAddress(coinPart)) {
+            mintAddress = coinPart
+          }
+        }
+        // Handle dexscreener URLs
+        else if (url.hostname === 'dexscreener.com') {
+          const pathParts = url.pathname.split('/')
+          // Find the index of 'solana' and get the next segment
+          const solanaIdx = pathParts.findIndex((p) => p === 'solana')
+          if (solanaIdx !== -1 && pathParts.length > solanaIdx + 1) {
+            const possibleMint = pathParts[solanaIdx + 1]
+            if (possibleMint && isMintAddress(possibleMint)) {
+              mintAddress = possibleMint
+            }
+          }
+        }
+
+        if (mintAddress) {
+          ctx.state = { ...ctx.state, mint: mintAddress }
+        }
+      } catch (error) {
+        // Invalid URL, continue with normal flow
+        console.log('Invalid URL format:', error)
+      }
+    }
+
     if (isMintAddress(ctx.state?.mint || ctx?.text || '')) {
       console.log('mint', ctx.state.mint)
       return await tokenResponse.tokenDetails(ctx)

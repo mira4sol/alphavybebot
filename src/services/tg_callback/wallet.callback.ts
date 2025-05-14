@@ -41,6 +41,15 @@ export const walletCallbackHandler = async (ctx: TelegrafCallbackContext) => {
             },
           }
         )
+
+        // Delete message after 60 seconds
+        setTimeout(async () => {
+          try {
+            await ctx.deleteMessage(message.message_id)
+          } catch (error) {
+            appLogger.error('Error deleting export message:', error)
+          }
+        }, 60000)
         break
       }
 
