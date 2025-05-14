@@ -12,6 +12,10 @@ export const startCommand = async (ctx: Context) => {
   // const user = await UserModel.addUserIfNotExists(chat_id)
 
   try {
+    if (ctx?.chat?.type !== 'private') {
+      throw new Error(`❌ Send me a DM to use this command`)
+    }
+
     await ctx.sendChatAction('typing')
     // const refID = payload?.message?.text.split(' ')[1]
     // if (refID) {

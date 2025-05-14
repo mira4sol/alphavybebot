@@ -1,6 +1,7 @@
 import { UserModel } from '@/models/user.model'
 import { bot } from '@/utils/platform'
 import { deleteMessageCallback } from './tg_callback/delete_tg_callback'
+import { menuCallbackHandler } from './tg_callback/menu.callback'
 import { settingsCallbackHandler } from './tg_callback/settings.callback'
 import { tradingCallbackHandler } from './tg_callback/trading.callback'
 import { balanceCommand } from './tg_commands/balance.tg_command'
@@ -8,6 +9,7 @@ import { callsCommand } from './tg_commands/calls.tg_command'
 import { cancelAlertCommand } from './tg_commands/cancel_alert.tg_command'
 import { chartCommand } from './tg_commands/chart.tg_command'
 import { leaderboardCommand } from './tg_commands/leaderboard.tg_command'
+import { menuCommand } from './tg_commands/menu.tg_command'
 import { messageCommand } from './tg_commands/message.tg_command'
 import { premiumCommand } from './tg_commands/premium.tg_command'
 import { settingsCommand } from './tg_commands/settings.tg_command'
@@ -19,19 +21,19 @@ import { walletAlertCommand } from './tg_commands/walllet_alert.tg_command'
 
 bot.use(async (ctx, next) => {
   // add user if not exists
-  await UserModel.addUserIfNotExists(
+  const user = await UserModel.addUserIfNotExists(
     ctx?.from?.id?.toString() || ctx?.message?.from?.id?.toString() || '',
     ctx?.message?.from?.username ||
       ctx?.message?.from?.first_name ||
       ctx?.message?.from?.username ||
       ctx?.message?.from?.first_name
   )
-
+  ctx.state.user = user
   await next() // runs next middleware
 })
 
 // app commands
-bot.command('start', startCommand)
+bot.command('start', menuCommand)
 bot.command('help', startCommand)
 bot.command('calls', callsCommand)
 bot.command('chart', chartCommand)
@@ -46,6 +48,7 @@ bot.command('ca', cancelAlertCommand)
 bot.command('pro', premiumCommand)
 bot.command('balance', balanceCommand)
 bot.command('settings', settingsCommand)
+bot.command('menu', menuCommand)
 
 // handle message
 bot.on('message', messageCommand)
@@ -53,3 +56,4 @@ bot.on('message', messageCommand)
 bot.action('delete', deleteMessageCallback)
 bot.action(/settings:(.+)/, settingsCallbackHandler)
 bot.action(/trading:(.+)/, tradingCallbackHandler)
+bot.action(/menu:(.+)/, menuCallbackHandler)

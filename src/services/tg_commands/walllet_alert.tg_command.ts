@@ -5,11 +5,15 @@ import { isValidSolanaAddress } from '@/utils/solana.lib'
 import { AddressType } from '@prisma/client'
 import { Context } from 'telegraf'
 
-export const walletAlertCommand = async (ctx: Context, type: AddressType) => {
+export const walletAlertCommand = async (
+  ctx: Context,
+  type: AddressType,
+  address?: string
+) => {
   let deleteMessageId = 0
 
   try {
-    const wallet_address = ctx.text?.split(' ')[1]
+    const wallet_address = address || ctx.text?.split(' ')[1]
     const level = ctx.text?.split(' ')[2]
     const price = ctx.text?.split(' ')[3]
 

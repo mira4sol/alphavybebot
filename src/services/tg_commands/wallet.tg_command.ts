@@ -15,9 +15,16 @@ export const walletCommand = async (ctx: Context) => {
   try {
     let wallet_address = ctx.text?.split(' ')[1]
 
-    if (ctx?.chat?.type === 'private' && !wallet_address) {
+    if (
+      (ctx?.chat?.type === 'private' ||
+        (ctx as any)?.update?.callback_query?.message?.chat?.type ===
+          'private') &&
+      (!wallet_address || !!(ctx as any)?.update?.callback_query)
+    ) {
       const wallet = await WalletModel.findWalletByTelegramId(
-        ctx.from?.id?.toString() || ''
+        (ctx as any)?.update?.callback_query?.from?.id?.toString() ||
+          ctx.from?.id?.toString() ||
+          ''
       )
       wallet_address = wallet.public_key
     }

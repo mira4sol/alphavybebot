@@ -9,6 +9,8 @@ export interface SessionData {
     | 'sell_partial_percentage'
     | 'sell_full_percentage'
     | 'custom_buy_amount'
+    | 'buy_token'
+    | 'track_wallet'
   originalMessageId?: number
   mintAddress?: string
 }
