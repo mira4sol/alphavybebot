@@ -8,7 +8,7 @@ import { vybeApi } from '@/utils/platform'
 import { isValidSolanaAddress } from '@/utils/solana.lib'
 import { formatDecimalPrice, formatLongNumber } from '@/utils/string'
 import { GetTokenTradeOhlcResponse200 } from '@api/vybe-api'
-import { createCanvas, GlobalFonts } from '@napi-rs/canvas'
+import { createCanvas } from '@napi-rs/canvas'
 import { Context } from 'telegraf'
 
 const LOG_NAME = '[ChartCommand::Message]'
@@ -62,6 +62,8 @@ export const chartCommand = async (ctx: Context) => {
           },
         })
       )?.message_id || 0
+
+    await ctx.sendChatAction('typing')
 
     const timeStart = timeEnd - durationMap[timeframe]
 

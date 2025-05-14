@@ -25,6 +25,7 @@ export const topTokensCommand = async (ctx: Context, solOnly?: boolean) => {
         }
       )
     )?.message_id
+    await ctx.sendChatAction('typing')
 
     const topTokensResp = await coinGeckoRequests.getTopCoins(solOnly)
     if (!topTokensResp.success) throw new Error(topTokensResp.message)

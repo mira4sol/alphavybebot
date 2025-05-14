@@ -28,6 +28,7 @@ export const settingsCommand = async (ctx: Context) => {
           reply_parameters: { message_id: ctx?.msgId || 0 },
         })
       )?.message_id || 0
+    await ctx.sendChatAction('typing')
 
     const settings = await SettingsModel.findUserSettings(
       ctx?.chat?.id?.toString() || ''

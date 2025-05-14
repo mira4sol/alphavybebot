@@ -6,6 +6,7 @@ const LOG_NAME = '[premiumCommand::Message]'
 
 export const premiumCommand = async (ctx: Context) => {
   try {
+    await ctx.sendChatAction('typing')
     await ctx.reply(
       `
 Subscribe to pro to unlock more features, do more setting up alerts for tokens and catch up with the trends in real time.

@@ -17,6 +17,7 @@ export const tokenResponse = {
         reply_parameters: { message_id: ctx?.msgId || 0 },
       })
     )?.message_id
+    await ctx.sendChatAction('typing')
 
     try {
       const mint_address = ctx.state?.mint || ctx?.text || ''

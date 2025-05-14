@@ -11,6 +11,7 @@ help - Get detailed guidance
 settings - Bot settings
 tt - Top 10 Solana tokens
 ttg - View top 10 global tokens
+menu - View App
 
 
 ta - (Token Alert): Get token alerts by subscribing to a mint address

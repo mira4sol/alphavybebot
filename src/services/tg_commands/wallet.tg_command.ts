@@ -16,7 +16,7 @@ export const walletCommand = async (ctx: Context) => {
     let wallet_address = ctx.text?.split(' ')[1]
 
     if (ctx?.chat?.type === 'private' && !wallet_address) {
-      const wallet = await WalletModel.findWallet(
+      const wallet = await WalletModel.findWalletByTelegramId(
         ctx.from?.id?.toString() || ''
       )
       wallet_address = wallet.public_key
@@ -42,6 +42,7 @@ export const walletCommand = async (ctx: Context) => {
           reply_parameters: { message_id: ctx?.msgId || 0 },
         })
       )?.message_id || 0
+    await ctx.sendChatAction('typing')
 
     const walletReq = await vybeApi.get_wallet_tokens({
       ownerAddress: wallet_address,
@@ -59,7 +60,9 @@ export const walletCommand = async (ctx: Context) => {
     let wallet
 
     if (ctx?.chat?.type === 'private') {
-      wallet = await WalletModel.findWallet(ctx.from?.id?.toString() || '')
+      wallet = await WalletModel.findWalletByTelegramId(
+        ctx.from?.id?.toString() || ''
+      )
     }
 
     const isYours = wallet?.public_key === wallet_address

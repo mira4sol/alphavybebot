@@ -12,6 +12,7 @@ export const startCommand = async (ctx: Context) => {
   // const user = await UserModel.addUserIfNotExists(chat_id)
 
   try {
+    await ctx.sendChatAction('typing')
     // const refID = payload?.message?.text.split(' ')[1]
     // if (refID) {
     //   await UserModel.addReferral(refID, chat_id)

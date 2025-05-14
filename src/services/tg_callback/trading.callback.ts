@@ -2,13 +2,17 @@ import { WalletModel } from '@/models/wallet.model'
 import { TelegrafCallbackContext } from '@/types/telegram.interface'
 import { jupiterRequests } from '@/utils/api_requests/jupiter.request'
 import { tgDeleteButton } from '@/utils/constants/tg.constants'
-import { connection } from '@/utils/solana.lib'
+import { connection, SOLANA_ADDRESSES } from '@/utils/solana.lib'
 import { Keypair } from '@solana/web3.js'
 
 export const tradingCallbackHandler = async (ctx: TelegrafCallbackContext) => {
   const callbackData = ctx.match[1] // Extract the specific action from the callback_data
   const telegramId = ctx.from?.id.toString()
-  console.log('callback called')
+  const originalMessageId = ctx.callbackQuery?.message?.message_id || 0
+  console.log('callback called', originalMessageId)
+
+  await ctx.sendChatAction('typing')
+
   if (!telegramId) {
     return await ctx.answerCbQuery('Error: User ID not found')
   }
@@ -51,7 +55,7 @@ export const tradingCallbackHandler = async (ctx: TelegrafCallbackContext) => {
           }
 
           // Get user's wallet
-          const wallet = await WalletModel.findWallet(telegramId)
+          const wallet = await WalletModel.findWalletByTelegramId(telegramId)
           if (!wallet) throw new Error('Wallet not found')
 
           // Decrypt private key
@@ -64,19 +68,24 @@ export const tradingCallbackHandler = async (ctx: TelegrafCallbackContext) => {
           const buyAmountLamports = buyAmount * 1e9 // Convert SOL to lamports
 
           if (balance < buyAmountLamports) {
-            throw new Error('Insufficient balance')
+            throw new Error(
+              `Insufficient balance
+try funding your wallet with SOL \`${keypair.publicKey.toString()}\``
+            )
           }
 
           // Get quote from Jupiter
           const quoteResponse = await jupiterRequests.quoteResponse({
             amount: buyAmountLamports,
-            inputMint: 'So11111111111111111111111111111111111111112', // SOL mint address
+            inputMint: SOLANA_ADDRESSES.WSOL_MINT, // SOL mint address
             outputMint: mintAddress,
           })
 
           if (!quoteResponse.success) {
             throw new Error(quoteResponse.message || 'Unable to get quote')
           }
+
+          console.log('quoteResponse', quoteResponse.data)
 
           // Get swap response
           const swapResponse = await jupiterRequests.swapResponse({
@@ -89,6 +98,8 @@ export const tradingCallbackHandler = async (ctx: TelegrafCallbackContext) => {
           if (!swapResponse.success) {
             throw new Error(swapResponse.message || 'Unable to create swap')
           }
+
+          console.log('swapResponse', swapResponse.data)
 
           // Send transaction
           await jupiterRequests.sendTransaction(swapResponse.data, keypair)
@@ -109,6 +120,8 @@ export const tradingCallbackHandler = async (ctx: TelegrafCallbackContext) => {
     const errorMessage = error.message || 'Unknown error'
     await ctx.answerCbQuery('Error: ' + errorMessage)
     await ctx.reply('❌ ' + errorMessage, {
+      parse_mode: 'Markdown',
+      reply_parameters: { message_id: originalMessageId },
       reply_markup: {
         inline_keyboard: [tgDeleteButton],
       },

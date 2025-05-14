@@ -36,6 +36,7 @@ export const trendingCommand = async (ctx: Context) => {
         reply_parameters: { message_id: ctx?.msgId || 0 },
       })
     )?.message_id
+    await ctx.sendChatAction('typing')
 
     // Read and parse the top tokens file
     const fileContent = fs.readFileSync(TOP_TOKENS_FILE, 'utf-8')

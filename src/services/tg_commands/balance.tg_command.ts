@@ -27,8 +27,11 @@ export const balanceCommand = async (ctx: Context) => {
           reply_parameters: { message_id: ctx?.msgId || 0 },
         })
       )?.message_id || 0
+    await ctx.sendChatAction('typing')
 
-    const wallet = await WalletModel.findWallet(ctx.from?.id?.toString() || '')
+    const wallet = await WalletModel.findWalletByTelegramId(
+      ctx.from?.id?.toString() || ''
+    )
     console.log('wallet', wallet)
     ctx.reply(`✅ in dev`)
   } catch (error: any) {

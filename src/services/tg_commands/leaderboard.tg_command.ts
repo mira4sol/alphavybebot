@@ -24,6 +24,7 @@ export const leaderboardCommand = async (ctx: Context) => {
         reply_parameters: { message_id: ctx?.msgId || 0 },
       })
     )?.message_id
+    await ctx.sendChatAction('typing')
 
     const getLeaderBoard = await LeaderboardModel.getGroupLeaderboard(
       ctx?.chat?.id?.toString() || ''

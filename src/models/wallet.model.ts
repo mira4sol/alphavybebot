@@ -7,7 +7,7 @@ import {
 import { prisma } from '../utils/prisma.helper'
 
 export class WalletModel {
-  static async findWallet(telegram_id: string) {
+  static async findWalletByTelegramId(telegram_id: string) {
     try {
       // Get the user with wallet info
       let wallet = await prisma.wallet.findFirst({
@@ -46,10 +46,24 @@ export class WalletModel {
     }
   }
 
+  static async findWalletByPublicKey(public_key: string) {
+    try {
+      // Get the user with wallet info
+      let wallet = await prisma.wallet.findFirst({
+        where: { public_key },
+      })
+
+      return wallet
+    } catch (error) {
+      console.error('Error creating wallet:', error)
+      throw error
+    }
+  }
+
   static async decryptWalletKey(telegram_id: string) {
     try {
       // Get the user with wallet info
-      let wallet = await this.findWallet(telegram_id)
+      let wallet = await this.findWalletByTelegramId(telegram_id)
       if (!wallet) throw new Error('Wallet not found')
 
       // Decrypt the private key

@@ -6,6 +6,8 @@ export const deleteMessageCallback = async (ctx: TelegrafCallbackContext) => {
     const originalUserId = callbackQuery?.from?.id
     const messageToDelete = callbackQuery?.message
 
+    await ctx.sendChatAction('typing')
+
     // Check if the user who clicked is the original sender
     if (originalUserId && messageToDelete) {
       await ctx.deleteMessage(messageToDelete.message_id)

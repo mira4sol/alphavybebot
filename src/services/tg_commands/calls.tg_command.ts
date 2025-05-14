@@ -24,6 +24,7 @@ export const callsCommand = async (ctx: Context) => {
         reply_parameters: { message_id: ctx?.msgId || 0 },
       })
     )?.message_id
+    await ctx.sendChatAction('typing')
 
     const call = await TokenCallModel.getChatTopCaller(ctx.chat?.id?.toString())
     console.log('calls', call)

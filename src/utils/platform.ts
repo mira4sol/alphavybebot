@@ -10,10 +10,6 @@ if (!ENV.REDIS_URL) {
   process.exit(1)
 }
 
-// const store = Redis<SessionData>({
-//   url: ENV.REDIS_URL,
-// })
-
 // bot.use(session({ store }))
 bot.use(session())
 

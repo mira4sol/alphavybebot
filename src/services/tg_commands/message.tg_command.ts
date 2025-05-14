@@ -54,7 +54,7 @@ export const messageCommand = async (ctx: TelegrafContext) => {
           if (!mintAddress) throw new Error('Token address not found')
 
           // Get user's wallet
-          const wallet = await WalletModel.findWallet(telegramId)
+          const wallet = await WalletModel.findWalletByTelegramId(telegramId)
           if (!wallet) throw new Error('Wallet not found')
 
           // Decrypt private key

@@ -15,15 +15,18 @@ export const jupiterRequests = {
     slippageBps = 50,
   }: JupiterQuoteParams) => {
     try {
-      const url = `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount={amount}&slippageBps=${slippageBps}&restrictIntermediateTokens=true`
+      const url = `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippageBps}&restrictIntermediateTokens=true`
       const res = await httpRequest().get(url)
 
-      return apiResponse(true, 'qoute response', res.data)
+      return apiResponse(true, 'quote response', res.data)
     } catch (err: any) {
-      console.log('Error swap data:', err?.response?.data)
+      console.log('Error quote data:', err?.response?.data)
       return apiResponse(
         false,
-        err?.response?.data?.message || err?.message || 'Error occurred.',
+        err?.response?.data?.error ||
+          err?.response?.data?.message ||
+          err?.message ||
+          'Error occurred.',
         err
       )
     }
@@ -37,7 +40,8 @@ export const jupiterRequests = {
   }: JupiterSwapParams) => {
     try {
       const url = `https://lite-api.jup.ag/swap/v1/swap`
-      const res = await httpRequest().post(url, {
+
+      const data = JSON.stringify({
         quoteResponse,
         userPublicKey,
         dynamicComputeUnitLimit, // Estimate compute units dynamically
@@ -52,12 +56,17 @@ export const jupiterRequests = {
         },
       } as JupiterSwapParams)
 
+      const res = await httpRequest().post(url, data)
+
       return apiResponse(true, 'swap response', res.data)
     } catch (err: any) {
       console.log('Error swap data:', err?.response?.data)
       return apiResponse(
         false,
-        err?.response?.data?.message || err?.message || 'Error occurred.',
+        err?.response?.data?.error ||
+          err?.response?.data?.message ||
+          err?.message ||
+          'Error occurred.',
         err
       )
     }
@@ -101,7 +110,10 @@ export const jupiterRequests = {
       console.log('Error swap data:', err?.response?.data)
       return apiResponse(
         false,
-        err?.response?.data?.message || err?.message || 'Error occurred.',
+        err?.response?.data?.error ||
+          err?.response?.data?.message ||
+          err?.message ||
+          'Error occurred.',
         err
       )
     }

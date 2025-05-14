@@ -6,6 +6,8 @@ export const settingsCallbackHandler = async (ctx: TelegrafCallbackContext) => {
   const callbackData = ctx.match[1] // Extract the specific action from the callback_data
   const telegramId = ctx.from?.id.toString()
 
+  await ctx.sendChatAction('typing')
+
   if (!telegramId) {
     return await ctx.answerCbQuery('Error: User ID not found')
   }

@@ -52,6 +52,7 @@ export const walletAlertCommand = async (ctx: Context, type: AddressType) => {
           reply_parameters: { message_id: ctx?.msgId || 0 },
         })
       )?.message_id || 0
+    await ctx.sendChatAction('typing')
 
     await SubscriptionModel.subscribed({
       address: wallet_address,
