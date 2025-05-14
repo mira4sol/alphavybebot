@@ -9,7 +9,10 @@ import { setupFont } from './utils/canvas.util'
 import { ENV } from './utils/constants/env.constants'
 import { appLogger } from './utils/logger.util'
 import { prisma } from './utils/prisma.helper'
-import { VybeWebSocket } from './utils/vybesocket-client'
+import {
+  availableTradesPrograms,
+  VybeWebSocket,
+} from './utils/vybesocket-client'
 
 let server: http.Server
 let wsClient: VybeWebSocket | null = null
@@ -53,12 +56,12 @@ const bootstrap = async () => {
     configureMessage: {
       type: 'configure',
       filters: {
-        // trades: [
-        //   { programId: availableTradesPrograms.RAYDIUM_V4 },
-        //   { programId: availableTradesPrograms.RAYDIUM_CLMM },
-        //   { programId: availableTradesPrograms.PUMP_FUN },
-        // ],
-        // transfers: [],
+        trades: [
+          { programId: availableTradesPrograms.RAYDIUM_V4 },
+          { programId: availableTradesPrograms.RAYDIUM_CLMM },
+          { programId: availableTradesPrograms.PUMP_FUN },
+        ],
+        transfers: [],
       },
     },
     onMessage: vybeWssCustomMessageHandler,

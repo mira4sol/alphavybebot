@@ -5,10 +5,12 @@ import { appLogger } from './logger.util'
 
 export const bot = new Telegraf(ENV.TELEGRAM_TOKEN || '')
 
-if (!ENV.REDIS_URL) {
-  appLogger.error('REDIS_URL is not set in environment variables')
-  process.exit(1)
-}
+// Add this error handler before bot.launch()
+bot.catch((err, ctx) => {
+  appLogger.error('Telegraf error occurred', err)
+  // Optionally, notify the user
+  // ctx.reply('❌ An unexpected error occurred. Please try again later.');
+})
 
 // bot.use(session({ store }))
 bot.use(session())

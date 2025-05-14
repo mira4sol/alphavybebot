@@ -30,14 +30,10 @@ export const menuCommand = async (ctx: Context) => {
     message += `*Your Wallet:*\n\`${wallet.public_key}\`\n\n`
     message += `*Quick Start Guide:*\n`
     message += `• Send SOL to your wallet address above to start trading\n`
-    message += `• Paste any Solana token address to analyze or trade it\n`
+    message += `• Paste and send any Solana token address to analyze or trade it\n`
     message += `• Use the buttons below to explore more features\n\n`
     message += `*Supported Sources:*\n`
-    message += `• Direct token addresses\n`
-    message += `• pump.fun links\n`
-    message += `• Birdeye links\n`
-    message += `• DEX Screener links\n`
-    message += `• Meteora links\n\n`
+    message += `• Direct token addresses like pump.fun links, Birdeye links, DEX Screener links, Meteora links\n\n`
     message += `*Security Note:*\n`
     message += `⚠️ Never share your seed phrase or private keys\n`
     message += `⚠️ Be cautious of fake airdrops or login pages\n\n`
