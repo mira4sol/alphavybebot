@@ -2,6 +2,7 @@ import { UserModel } from '@/models/user.model'
 import { bot } from '@/utils/platform'
 import { deleteMessageCallback } from './tg_callback/delete_tg_callback'
 import { settingsCallbackHandler } from './tg_callback/settings.callback'
+import { tradingCallbackHandler } from './tg_callback/trading.callback'
 import { balanceCommand } from './tg_commands/balance.tg_command'
 import { callsCommand } from './tg_commands/calls.tg_command'
 import { cancelAlertCommand } from './tg_commands/cancel_alert.tg_command'
@@ -51,6 +52,4 @@ bot.on('message', messageCommand)
 
 bot.action('delete', deleteMessageCallback)
 bot.action(/settings:(.+)/, settingsCallbackHandler)
-bot.action(/settings:(.+)/, (ctx) => {
-  ctx.match
-})
+bot.action(/trading:(.+)/, tradingCallbackHandler)

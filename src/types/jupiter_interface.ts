@@ -2,7 +2,7 @@ export interface JupiterQuoteParams {
   inputMint: string
   outputMint: string
   amount: number
-  slippageBps: number
+  slippageBps?: number
 }
 
 export interface JupiterQuoteResponse {

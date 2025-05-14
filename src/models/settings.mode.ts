@@ -31,7 +31,7 @@ export class SettingsModel {
       sell_partial_percentage?: number
       sell_full_percentage?: number
       auto_buy_enabled?: boolean
-      auto_sell_enabled?: boolean
+      auto_buy_amount_sol?: number
     }
   ) {
     try {

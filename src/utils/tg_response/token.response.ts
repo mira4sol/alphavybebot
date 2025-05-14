@@ -1,3 +1,4 @@
+import { SettingsModel } from '@/models/settings.mode'
 import { TokenCallModel } from '@/models/token-call.model'
 import { RugResponse } from '@/types/rug.interface'
 import { Context } from 'telegraf'
@@ -47,6 +48,10 @@ export const tokenResponse = {
           })
         : undefined
 
+      const settings = await SettingsModel.findUserSettings(
+        ctx.from?.id?.toString() || ''
+      )
+
       return await ctx.replyWithPhoto(
         tokenDetails?.data?.logoUrl || rugData?.fileMeta?.image || '',
         {
@@ -60,20 +65,52 @@ export const tokenResponse = {
           reply_markup: {
             inline_keyboard: [
               [
-                {
-                  text: 'Trade',
-                  // callback_data: 'trade',
-                  url:
-                    getBotLink +
-                    '?start=trade_' +
-                    tokenDetails.data?.mintAddress,
-                },
-                // https://t.me/phanes_bot?start=price_3t6qtFX3YYeoUcYKVUCMfC7wVGu9neTfPXC41h63pump
+                ...(isGroup
+                  ? [
+                      {
+                        text: 'Trade',
+                        url:
+                          getBotLink +
+                          '?start=trade_' +
+                          tokenDetails.data?.mintAddress,
+                      },
+                    ]
+                  : []),
                 {
                   text: 'Vybe FYI',
                   url: `https://vybe.fyi/tokens/${tokenDetails.data?.mintAddress}`,
                 },
               ],
+              ...(!isGroup
+                ? [
+                    [
+                      {
+                        text: '--- BUY ---',
+                        callback_data: 'trading:buy_buttons_config',
+                      },
+                    ],
+                    [
+                      {
+                        text: '✅ SWAP',
+                        callback_data: 'trading:trade_swap',
+                      },
+                    ],
+                    [
+                      {
+                        text: `${settings?.buy_amount_sol} SOL`,
+                        callback_data: `trading:buy_${settings?.buy_amount_sol}_${tokenDetails.data?.mintAddress}`,
+                      },
+                      {
+                        text: `${settings?.max_buy_amount_sol} SOL`,
+                        callback_data: `trading:buy_${settings?.max_buy_amount_sol}_${tokenDetails.data?.mintAddress}`,
+                      },
+                      {
+                        text: 'X SOL ✍🏽',
+                        callback_data: `trading:buy_x_${tokenDetails.data?.mintAddress}`,
+                      },
+                    ],
+                  ]
+                : []),
               tgDeleteButton,
             ],
           },

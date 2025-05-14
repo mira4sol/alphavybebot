@@ -31,7 +31,7 @@ export const topTokensCommand = async (ctx: Context, solOnly?: boolean) => {
 
     const topTokensData = topTokensResp.data as CoinGeckoMarketData[]
 
-    console.log('topTokensData', topTokensData)
+    // console.log('topTokensData', topTokensData)
 
     const tokensText = topTokensData
       .map((token) => {

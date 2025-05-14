@@ -1,9 +1,29 @@
 import { Context } from 'telegraf'
-import { CallbackQuery, Update } from 'telegraf/typings/core/types/typegram'
+import { CallbackQuery, Update } from 'telegraf/types'
+
+export interface SessionData {
+  waitingForInput?:
+    | 'auto_buy_amount_sol'
+    | 'left_buy_amount_sol'
+    | 'right_buy_amount_sol'
+    | 'sell_partial_percentage'
+    | 'sell_full_percentage'
+    | 'custom_buy_amount'
+  originalMessageId?: number
+  mintAddress?: string
+}
+
+export interface TelegrafContext extends Context<Update> {
+  session?: SessionData
+  state: {
+    mint?: string
+  }
+}
 
 export type TelegrafCallbackContext = Context<
   Update.CallbackQueryUpdate<CallbackQuery>
 > & {
+  session?: SessionData
   match: RegExpExecArray
 }
 

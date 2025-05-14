@@ -1,51 +1,104 @@
+import { SettingsModel } from '@/models/settings.mode'
 import { TelegrafCallbackContext } from '@/types/telegram.interface'
+import { settingsCommand } from '../tg_commands/settings.tg_command'
 
 export const settingsCallbackHandler = async (ctx: TelegrafCallbackContext) => {
   const callbackData = ctx.match[1] // Extract the specific action from the callback_data
-  // const callbackData = ctx?.callbackQuery?.id // Extract the specific action from the callback_data
-  console.log('callbackData', ctx.match)
+  const telegramId = ctx.from?.id.toString()
 
-  return await ctx.answerCbQuery('Coming soon')
-  // switch (callbackData) {
-  //   case 'general_settings':
-  //     // Handle general settings action
-  //     await ctx.answerCbQuery('General settings clicked')
-  //     break
-  //   case 'auto_buy':
-  //     // Handle auto buy action
-  //     await ctx.answerCbQuery('Auto buy clicked')
-  //     break
-  //   case 'change_auto_buy':
-  //     await ctx.answerCbQuery('Change Auto Buy')
-  //     break
-  //   case 'update_auto_buy_amount_sol':
-  //     // Handle update auto buy amount action
-  //     await ctx.answerCbQuery('Update auto buy amount clicked')
-  //     break
-  //   case 'buy_buttons_config':
-  //     // Handle buy buttons config action
-  //     await ctx.answerCbQuery('Buy buttons config clicked')
-  //     break
-  //   case 'left_buy_config':
-  //     await ctx.answerCbQuery('Left Buy Config')
-  //     break
-  //   case 'right_buy_config':
-  //     // Handle right buy config action
-  //     await ctx.answerCbQuery('Right buy config clicked')
-  //     break
-  //   case 'sell_buttons_config':
-  //     // Handle sell buttons config action
-  //     await ctx.answerCbQuery('Sell buttons config clicked')
-  //     break
-  //   case 'sell_partial_percentage':
-  //     // Handle sell partial percentage action
-  //     await ctx.answerCbQuery('Sell partial percentage clicked')
-  //     break
-  //   case 'sell_full_percentage':
-  //     // Handle sell full percentage action
-  //     await ctx.answerCbQuery('Sell full percentage clicked')
-  //     break
-  //   default:
-  //     await ctx.answerCbQuery('Unknown action')
-  // }
+  if (!telegramId) {
+    return await ctx.answerCbQuery('Error: User ID not found')
+  }
+
+  try {
+    switch (callbackData) {
+      case 'general_settings':
+        await ctx.answerCbQuery('General settings clicked')
+        break
+
+      case 'auto_buy':
+        await ctx.answerCbQuery('Auto buy clicked')
+        break
+
+      case 'change_auto_buy':
+        // Toggle auto buy setting
+        const currentSettings = await SettingsModel.findUserSettings(telegramId)
+        await SettingsModel.updateUserSettings(telegramId, {
+          auto_buy_enabled: !currentSettings.auto_buy_enabled,
+        })
+        await ctx.answerCbQuery('Auto buy setting updated')
+        // Refresh the settings message
+        await settingsCommand(ctx)
+        break
+
+      case 'update_auto_buy_amount_sol':
+        // Set session for auto buy amount input
+        ctx.session = {
+          ...ctx.session,
+          waitingForInput: 'auto_buy_amount_sol',
+          originalMessageId: ctx.callbackQuery?.message?.message_id,
+        }
+        await ctx.answerCbQuery('Please enter the new auto buy amount in SOL')
+        await ctx.reply(
+          'Please enter the new auto buy amount in SOL (e.g., 0.5)'
+        )
+        break
+
+      case 'left_buy_config':
+        // Set session for left buy amount input
+        ctx.session = {
+          ...ctx.session,
+          waitingForInput: 'left_buy_amount_sol',
+          originalMessageId: ctx.callbackQuery?.message?.message_id,
+        }
+        await ctx.answerCbQuery('Please enter the new left buy amount in SOL')
+        await ctx.reply(
+          'Please enter the new left buy amount in SOL (e.g., 0.1)'
+        )
+        break
+
+      case 'right_buy_config':
+        // Set session for right buy amount input
+        ctx.session = {
+          ...ctx.session,
+          waitingForInput: 'right_buy_amount_sol',
+          originalMessageId: ctx.callbackQuery?.message?.message_id,
+        }
+        await ctx.answerCbQuery('Please enter the new right buy amount in SOL')
+        await ctx.reply(
+          'Please enter the new right buy amount in SOL (e.g., 1.0)'
+        )
+        break
+
+      case 'sell_partial_percentage':
+        // Set session for partial sell percentage input
+        ctx.session = {
+          ...ctx.session,
+          waitingForInput: 'sell_partial_percentage',
+          originalMessageId: ctx.callbackQuery?.message?.message_id,
+        }
+        await ctx.answerCbQuery('Please enter the new partial sell percentage')
+        await ctx.reply(
+          'Please enter the new partial sell percentage (e.g., 25)'
+        )
+        break
+
+      case 'sell_full_percentage':
+        // Set session for full sell percentage input
+        ctx.session = {
+          ...ctx.session,
+          waitingForInput: 'sell_full_percentage',
+          originalMessageId: ctx.callbackQuery?.message?.message_id,
+        }
+        await ctx.answerCbQuery('Please enter the new full sell percentage')
+        await ctx.reply('Please enter the new full sell percentage (e.g., 100)')
+        break
+
+      default:
+        await ctx.answerCbQuery('Unknown action')
+    }
+  } catch (error: any) {
+    console.error('Error in settings callback:', error)
+    await ctx.answerCbQuery('Error: ' + (error.message || 'Unknown error'))
+  }
 }

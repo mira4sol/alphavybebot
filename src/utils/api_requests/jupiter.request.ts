@@ -12,9 +12,10 @@ export const jupiterRequests = {
     amount,
     inputMint,
     outputMint,
+    slippageBps = 50,
   }: JupiterQuoteParams) => {
     try {
-      const url = `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount={amount}&slippageBps=50&restrictIntermediateTokens=true`
+      const url = `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount={amount}&slippageBps=${slippageBps}&restrictIntermediateTokens=true`
       const res = await httpRequest().get(url)
 
       return apiResponse(true, 'qoute response', res.data)
