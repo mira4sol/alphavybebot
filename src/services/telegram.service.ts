@@ -4,6 +4,7 @@ import { deleteMessageCallback } from './tg_callback/delete_tg_callback'
 import { menuCallbackHandler } from './tg_callback/menu.callback'
 import { settingsCallbackHandler } from './tg_callback/settings.callback'
 import { tradingCallbackHandler } from './tg_callback/trading.callback'
+import { walletCallbackHandler } from './tg_callback/wallet.callback'
 import { balanceCommand } from './tg_commands/balance.tg_command'
 import { callsCommand } from './tg_commands/calls.tg_command'
 import { cancelAlertCommand } from './tg_commands/cancel_alert.tg_command'
@@ -57,3 +58,4 @@ bot.action('delete', deleteMessageCallback)
 bot.action(/settings:(.+)/, settingsCallbackHandler)
 bot.action(/trading:(.+)/, tradingCallbackHandler)
 bot.action(/menu:(.+)/, menuCallbackHandler)
+bot.action(/wallet:(.+)/, walletCallbackHandler)

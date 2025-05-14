@@ -59,9 +59,9 @@ export const tradingCallbackHandler = async (ctx: TelegrafCallbackContext) => {
           if (!wallet) throw new Error('Wallet not found')
 
           // Decrypt private key
-          const privateKeyHex = await WalletModel.decryptWalletKey(telegramId)
-          const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex')
-          const keypair = Keypair.fromSecretKey(privateKeyBuffer)
+          const keypair = await WalletModel.decryptWalletKey(telegramId)
+          // const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex')
+          // const keypair = Keypair.fromSecretKey(privateKeyBuffer)
 
           // Get SOL balance
           const balance = await connection.getBalance(keypair.publicKey)

@@ -6,6 +6,7 @@ import { vybeApi } from '@/utils/platform'
 import { isValidSolanaAddress } from '@/utils/solana.lib'
 import { escapeMarkdown, formatDecimalPrice } from '@/utils/string'
 import { Context } from 'telegraf'
+import { InlineKeyboardButton } from 'telegraf/types'
 
 const LOG_NAME = '[TelegramCommand::Message]'
 
@@ -119,20 +120,34 @@ ${
     )}${balanceEmptyText || tipText}
 ${tokenDetailsTxt}`
     // └ ${vybeFYIWalletLink('*Analyze wallet with vybe*', wallet_address)}
+
+    // Add export button if it's the user's own wallet in private chat
+    const inlineKeyboard: InlineKeyboardButton[][] = [
+      [
+        {
+          text: 'Vybe FYI',
+          url: `https://vybe.fyi/wallets/${wallet_address}`,
+        },
+      ],
+    ]
+
+    if (isYours && ctx?.chat?.type === 'private') {
+      inlineKeyboard.push([
+        {
+          text: '🔑 Export Wallet',
+          callback_data: 'wallet:export_wallet',
+        },
+      ])
+    }
+
+    inlineKeyboard.push(tgDeleteButton)
+
     return await ctx.reply(walletMessageText, {
       parse_mode: 'MarkdownV2',
       reply_parameters: { message_id: ctx?.msgId || 0 },
       link_preview_options: { is_disabled: true },
       reply_markup: {
-        inline_keyboard: [
-          [
-            {
-              text: 'Vybe FYI',
-              url: `https://vybe.fyi/wallets/${wallet_address}`,
-            },
-          ],
-          tgDeleteButton,
-        ],
+        inline_keyboard: inlineKeyboard,
       },
     })
   } catch (error: any) {

@@ -9,7 +9,6 @@ import {
   isValidSolanaAddress,
 } from '@/utils/solana.lib'
 import { tokenResponse } from '@/utils/tg_response/token.response'
-import { Keypair } from '@solana/web3.js'
 import { settingsCommand } from './settings.tg_command'
 import { walletAlertCommand } from './walllet_alert.tg_command'
 
@@ -37,9 +36,9 @@ export const messageCommand = async (ctx: TelegrafContext) => {
           if (!wallet) throw new Error('Wallet not found')
 
           // Decrypt private key
-          const privateKeyHex = await WalletModel.decryptWalletKey(telegramId)
-          const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex')
-          const keypair = Keypair.fromSecretKey(privateKeyBuffer)
+          const keypair = await WalletModel.decryptWalletKey(telegramId)
+          // const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex')
+          // const keypair = Keypair.fromSecretKey(privateKeyBuffer)
 
           // Get SOL balance
           const balance = await connection.getBalance(keypair.publicKey)
@@ -140,11 +139,9 @@ export const messageCommand = async (ctx: TelegrafContext) => {
               if (!wallet) throw new Error('Wallet not found')
 
               // Decrypt private key
-              const privateKeyHex = await WalletModel.decryptWalletKey(
-                telegramId
-              )
-              const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex')
-              const keypair = Keypair.fromSecretKey(privateKeyBuffer)
+              const keypair = await WalletModel.decryptWalletKey(telegramId)
+              // const privateKeyBuffer = Buffer.from(privateKeyHex, 'hex')
+              // const keypair = Keypair.fromSecretKey(privateKeyBuffer)
 
               // Get SOL balance
               const balance = await connection.getBalance(keypair.publicKey)

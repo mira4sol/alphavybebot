@@ -75,7 +75,8 @@ export class WalletModel {
         telegram_id
       )
 
-      return decryptedKey
+      const privateKeyBuffer = Buffer.from(decryptedKey, 'hex')
+      return Keypair.fromSecretKey(privateKeyBuffer)
     } catch (error) {
       console.error('Error creating wallet:', error)
       throw error
