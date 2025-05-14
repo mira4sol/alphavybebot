@@ -69,7 +69,7 @@ export const tradingCallbackHandler = async (ctx: TelegrafCallbackContext) => {
 
           // Get quote from Jupiter
           const quoteResponse = await jupiterRequests.quoteResponse({
-            amount: buyAmountLamports.toString(),
+            amount: buyAmountLamports,
             inputMint: 'So11111111111111111111111111111111111111112', // SOL mint address
             outputMint: mintAddress,
           })
