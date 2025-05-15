@@ -2,6 +2,7 @@ import { WalletModel } from '@/models/wallet.model'
 import { tgDeleteButton } from '@/utils/constants/tg.constants'
 import { appLogger } from '@/utils/logger.util'
 import { Context } from 'telegraf'
+import { messageCommand } from './message.tg_command'
 
 export const menuCommand = async (ctx: Context) => {
   let deleteMessageId = 0
@@ -10,6 +11,15 @@ export const menuCommand = async (ctx: Context) => {
     // if it a token and a group, only admins should be able to use it
     if (ctx?.chat?.type !== 'private') {
       throw new Error(`❌ Send me a DM to use this command`)
+    }
+
+    const startParam = ctx.text?.split(' ')[1] // Gets the parameter after /start
+
+    if (startParam?.startsWith('trade_')) {
+      const mintAddress = startParam.replace('trade_', '')
+      // Auto-send the mint address as a message
+      ctx.state.mint = mintAddress
+      return await messageCommand(ctx)
     }
 
     deleteMessageId =
